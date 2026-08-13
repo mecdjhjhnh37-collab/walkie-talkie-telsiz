@@ -1,828 +1,142 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
 <meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width,
-               initial-scale=1.0,
-               maximum-scale=1.0,
-               user-scalable=no">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Radio</title>
 
 <style>
-
-*{
-    box-sizing:border-box;
-    -webkit-tap-highlight-color:transparent;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-html,body{
-    margin:0;
-    padding:0;
-    width:100%;
-    min-height:100%;
-    background:#000;
+html, body {
+    width: 100%;
+    height: 100%;
+    background: #000;
+    overflow: hidden;
 }
 
-body{
-    display:flex;
-    justify-content:center;
-    align-items:flex-start;
-    overflow-x:hidden;
+.radio {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* =========================================
-   الراديو - نفس الصورة
-   ========================================= */
-
-.radio{
-    position:relative;
-
-    width:min(100vw, 1024px);
-
-    aspect-ratio:1024 / 1536;
-
-    background-image:url("1000042286.jpg");
-    background-size:100% 100%;
-    background-repeat:no-repeat;
-
-    user-select:none;
+.radio-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
 }
 
-
-/* =========================================
-   الأزرار الشفافة فوق الصورة
-   ========================================= */
-
-.button{
-    position:absolute;
-
-    border:0;
-    padding:0;
-
-    background:transparent;
-
-    cursor:pointer;
-
-    z-index:20;
-
-    -webkit-tap-highlight-color:transparent;
-
-    touch-action:manipulation;
+/* الشاشة */
+.screen {
+    position: absolute;
+    width: 38%;
+    height: 13%;
+    left: 31%;
+    top: 34%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
 }
 
-.button:active{
-    transform:scale(.95);
+.number {
+    font-family: monospace;
+    font-size: clamp(45px, 12vw, 100px);
+    font-weight: bold;
+    color: #000;
 }
 
-
-/* =========================================
-   POWER
-   ========================================= */
-
-.power{
-    left:12%;
-    top:20%;
-    width:18%;
-    height:9%;
+/* الأزرار */
+button {
+    position: absolute;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    z-index: 5;
 }
 
-
-/* =========================================
-   LOCAL
-   ========================================= */
-
-.local{
-    left:40%;
-    top:16.5%;
-    width:24%;
-    height:6%;
+/* + */
+.plus {
+    width: 12%;
+    height: 6%;
+    left: 30%;
+    top: 50%;
 }
 
-
-/* =========================================
-   RP
-   ========================================= */
-
-.rp{
-    left:75%;
-    top:21%;
-    width:14%;
-    height:7%;
+/* M */
+.mode {
+    width: 12%;
+    height: 6%;
+    left: 44%;
+    top: 50%;
 }
 
-
-/* =========================================
-   شاشة الرقم
-   ========================================= */
-
-.channel{
-    position:absolute;
-
-    left:32%;
-    top:34%;
-
-    width:36%;
-    height:11%;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    font-family:
-        "Courier New",
-        monospace;
-
-    font-size:clamp(
-        45px,
-        11vw,
-        100px
-    );
-
-    font-weight:900;
-
-    color:#000;
-
-    pointer-events:none;
-
-    z-index:10;
-
-    letter-spacing:-4px;
+/* - */
+.minus {
+    width: 12%;
+    height: 6%;
+    left: 58%;
+    top: 50%;
 }
-
-
-/* =========================================
-   + 
-   ========================================= */
-
-.plus{
-    left:27%;
-    top:47%;
-    width:18%;
-    height:6%;
-}
-
-
-/* =========================================
-   M
-   ========================================= */
-
-.memory{
-    left:39%;
-    top:47%;
-    width:20%;
-    height:6%;
-}
-
-
-/* =========================================
-   -
-   ========================================= */
-
-.minus{
-    left:55%;
-    top:47%;
-    width:18%;
-    height:6%;
-}
-
-
-/* =========================================
-   UP
-   ========================================= */
-
-.up{
-    left:24%;
-    top:53%;
-    width:17%;
-    height:9%;
-}
-
-
-/* =========================================
-   SCAN
-   ========================================= */
-
-.scan{
-    left:38%;
-    top:53%;
-    width:25%;
-    height:8%;
-}
-
-
-/* =========================================
-   DN
-   ========================================= */
-
-.down{
-    left:58%;
-    top:53%;
-    width:18%;
-    height:9%;
-}
-
-
-/* =========================================
-   PTT
-   ========================================= */
-
-.ptt{
-    left:25%;
-    top:68%;
-    width:50%;
-    height:25%;
-}
-
-
-/* =========================================
-   رسالة الحالة
-   ========================================= */
-
-.status{
-    position:fixed;
-
-    left:50%;
-    bottom:20px;
-
-    transform:translateX(-50%);
-
-    padding:10px 20px;
-
-    border-radius:20px;
-
-    background:rgba(0,0,0,.85);
-
-    color:#fff;
-
-    font-family:Arial,sans-serif;
-
-    font-size:16px;
-
-    display:none;
-
-    z-index:100;
-}
-
-.status.show{
-    display:block;
-}
-
-
-/* =========================================
-   حالة M
-   ========================================= */
-
-.radio.moving .channel{
-    animation:channelFlash .25s infinite alternate;
-}
-
-@keyframes channelFlash{
-
-    from{
-        opacity:.55;
-    }
-
-    to{
-        opacity:1;
-    }
-
-}
-
 </style>
 </head>
 
-
 <body>
 
+<div class="radio">
 
-<div class="radio" id="radio">
+    <!-- غيّر الاسم فقط إذا اسم الصورة مختلف -->
+    <img src="radio.png" class="radio-img">
 
-
-    <!-- =====================================
-         رقم القناة
-         ===================================== -->
-
-    <div class="channel" id="channel">
-        001
+    <div class="screen">
+        <div class="number" id="number">001</div>
     </div>
 
+    <button class="plus" onclick="changeNumber(1)"></button>
 
-    <!-- =====================================
-         LOCAL
-         ===================================== -->
+    <button class="mode" onclick="modeChange()"></button>
 
-    <button
-        class="button local"
-        id="local"
-        aria-label="LOCAL">
-    </button>
-
-
-    <!-- =====================================
-         POWER
-         ===================================== -->
-
-    <button
-        class="button power"
-        id="power"
-        aria-label="POWER">
-    </button>
-
-
-    <!-- =====================================
-         RP
-         ===================================== -->
-
-    <button
-        class="button rp"
-        id="rp"
-        aria-label="RP">
-    </button>
-
-
-    <!-- =====================================
-         +
-         ===================================== -->
-
-    <button
-        class="button plus"
-        id="plus"
-        aria-label="PLUS">
-    </button>
-
-
-    <!-- =====================================
-         M
-         ===================================== -->
-
-    <button
-        class="button memory"
-        id="memory"
-        aria-label="M">
-    </button>
-
-
-    <!-- =====================================
-         -
-         ===================================== -->
-
-    <button
-        class="button minus"
-        id="minus"
-        aria-label="MINUS">
-    </button>
-
-
-    <!-- =====================================
-         UP
-         ===================================== -->
-
-    <button
-        class="button up"
-        id="up"
-        aria-label="UP">
-    </button>
-
-
-    <!-- =====================================
-         SCAN
-         ===================================== -->
-
-    <button
-        class="button scan"
-        id="scan"
-        aria-label="SCAN">
-    </button>
-
-
-    <!-- =====================================
-         DN
-         ===================================== -->
-
-    <button
-        class="button down"
-        id="down"
-        aria-label="DN">
-    </button>
-
-
-    <!-- =====================================
-         PTT
-         ===================================== -->
-
-    <button
-        class="button ptt"
-        id="ptt"
-        aria-label="PTT">
-    </button>
-
+    <button class="minus" onclick="changeNumber(-1)"></button>
 
 </div>
-
-
-<div
-    class="status"
-    id="status">
-</div>
-
-
 
 <script>
+let number = 1;
 
-/* =========================================
-   المتغيرات
-   ========================================= */
-
-let channel = 1;
-
-let powered = true;
-
-let moving = false;
-
-let moveTimer = null;
-
-let scanning = false;
-
-let scanTimer = null;
-
-
-/* =========================================
-   عرض الرقم
-   001 → 002 → ... → 999
-   ========================================= */
-
-function updateChannel(){
-
-    document.getElementById("channel")
-        .textContent =
-        String(channel).padStart(3,"0");
-
+function showNumber() {
+    document.getElementById("number").textContent =
+        String(number).padStart(3, "0");
 }
 
+function changeNumber(value) {
+    number += value;
 
-/* =========================================
-   رسالة
-   ========================================= */
+    if (number > 999) number = 1;
+    if (number < 1) number = 999;
 
-function message(text){
-
-    const status =
-        document.getElementById("status");
-
-    status.textContent = text;
-
-    status.classList.add("show");
-
-    clearTimeout(status.hideTimer);
-
-    status.hideTimer =
-        setTimeout(function(){
-
-            status.classList.remove("show");
-
-        },1200);
-
+    showNumber();
 }
 
+function modeChange() {
+    number++;
 
-/* =========================================
-   زيادة رقم
-   ========================================= */
-
-function increaseChannel(){
-
-    if(!powered) return;
-
-    channel++;
-
-    if(channel > 999){
-
-        channel = 1;
-
+    if (number > 999) {
+        number = 1;
     }
 
-    updateChannel();
-
+    showNumber();
 }
 
-
-/* =========================================
-   نقصان رقم
-   ========================================= */
-
-function decreaseChannel(){
-
-    if(!powered) return;
-
-    channel--;
-
-    if(channel < 1){
-
-        channel = 999;
-
-    }
-
-    updateChannel();
-
-}
-
-
-/* =========================================
-   زر +
-   ========================================= */
-
-document.getElementById("plus")
-.onclick = function(){
-
-    increaseChannel();
-
-};
-
-
-/* =========================================
-   زر -
-   ========================================= */
-
-document.getElementById("minus")
-.onclick = function(){
-
-    decreaseChannel();
-
-};
-
-
-/* =========================================
-   زر M
-   =========================================
-
-   عند الضغط على M يبدأ تغيير الأرقام
-   بشكل متواصل من 001 إلى 999.
-
-   عند الضغط مرة ثانية يتوقف.
-   ========================================= */
-
-document.getElementById("memory")
-.onclick = function(){
-
-    if(!powered) return;
-
-
-    if(moving){
-
-        stopMoving();
-
-        message("M STOP");
-
-        return;
-
-    }
-
-
-    moving = true;
-
-
-    document
-        .getElementById("radio")
-        .classList.add("moving");
-
-
-    moveTimer =
-        setInterval(function(){
-
-            channel++;
-
-            if(channel > 999){
-
-                channel = 1;
-
-            }
-
-            updateChannel();
-
-        },180);
-
-};
-
-
-/* =========================================
-   إيقاف M
-   ========================================= */
-
-function stopMoving(){
-
-    moving = false;
-
-    clearInterval(moveTimer);
-
-    moveTimer = null;
-
-
-    document
-        .getElementById("radio")
-        .classList.remove("moving");
-
-}
-
-
-/* =========================================
-   UP
-   ========================================= */
-
-document.getElementById("up")
-.onclick = function(){
-
-    increaseChannel();
-
-};
-
-
-/* =========================================
-   DN
-   ========================================= */
-
-document.getElementById("down")
-.onclick = function(){
-
-    decreaseChannel();
-
-};
-
-
-/* =========================================
-   SCAN
-   ========================================= */
-
-document.getElementById("scan")
-.onclick = function(){
-
-    if(!powered) return;
-
-
-    if(scanning){
-
-        stopScan();
-
-        message("SCAN OFF");
-
-        return;
-
-    }
-
-
-    scanning = true;
-
-
-    scanTimer =
-        setInterval(function(){
-
-            channel++;
-
-            if(channel > 999){
-
-                channel = 1;
-
-            }
-
-            updateChannel();
-
-        },250);
-
-
-    message("SCAN");
-
-};
-
-
-/* =========================================
-   إيقاف SCAN
-   ========================================= */
-
-function stopScan(){
-
-    scanning = false;
-
-    clearInterval(scanTimer);
-
-    scanTimer = null;
-
-}
-
-
-/* =========================================
-   POWER
-   ========================================= */
-
-document.getElementById("power")
-.onclick = function(){
-
-    powered = !powered;
-
-
-    if(!powered){
-
-        stopMoving();
-
-        stopScan();
-
-        document.getElementById("channel")
-            .textContent = "---";
-
-        message("RADIO OFF");
-
-    }
-
-    else{
-
-        updateChannel();
-
-        message("RADIO ON");
-
-    }
-
-};
-
-
-/* =========================================
-   LOCAL
-   ========================================= */
-
-document.getElementById("local")
-.onclick = function(){
-
-    if(!powered) return;
-
-    message("LOCAL");
-
-};
-
-
-/* =========================================
-   RP
-   ========================================= */
-
-document.getElementById("rp")
-.onclick = function(){
-
-    if(!powered) return;
-
-    message("RP");
-
-};
-
-
-/* =========================================
-   PTT
-   ========================================= */
-
-const ptt =
-    document.getElementById("ptt");
-
-
-ptt.addEventListener(
-    "pointerdown",
-    function(){
-
-        if(!powered) return;
-
-        message("PTT ON");
-
-    }
-);
-
-
-ptt.addEventListener(
-    "pointerup",
-    function(){
-
-        if(!powered) return;
-
-        message("PTT OFF");
-
-    }
-);
-
-
-ptt.addEventListener(
-    "pointercancel",
-    function(){
-
-        if(!powered) return;
-
-        message("PTT OFF");
-
-    }
-);
-
-
-/* =========================================
-   البداية
-   ========================================= */
-
-updateChannel();
-
+showNumber();
 </script>
 
 </body>
