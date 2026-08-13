@@ -3,32 +3,202 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-    <title>اللاسلكي</title>
+    <title>Walkie Talkie</title>
 
     <style>
 
         * {
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             margin: 0;
             min-height: 100vh;
+
             background: #101010;
 
             display: flex;
             align-items: center;
             justify-content: center;
+
+            overflow: hidden;
+
+            font-family: Arial, sans-serif;
         }
 
         .radio {
-            width: min(100vw, 600px);
+            position: relative;
+
+            width: min(100vw, 700px);
             aspect-ratio: 1 / 1;
 
-            object-fit: cover;
+            background-image: url("radio.jpg");
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
 
+
+        /* =========================
+           الشاشة
+        ========================= */
+
+        .screen {
+            position: absolute;
+
+            width: 20%;
+            height: 11%;
+
+            left: 40%;
+            top: 35%;
+
+            background: #ffae00;
+
+            border-radius: 8px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-family: monospace;
+
+            font-size: clamp(25px, 7vw, 55px);
+
+            color: #111;
+
+            text-shadow:
+                1px 1px 0 #222;
+
+            box-shadow:
+                inset 0 0 10px rgba(0,0,0,.3);
+
+            z-index: 5;
+        }
+
+
+        /* =========================
+           زر اليسار
+        ========================= */
+
+        .button-left {
+
+            position: absolute;
+
+            width: 8%;
+            height: 8%;
+
+            left: 34%;
+            top: 52%;
+
+            border: 0;
+
+            border-radius: 50%;
+
+            background: rgba(255,255,255,0.01);
+
+            cursor: pointer;
+
+            z-index: 10;
+        }
+
+
+        /* =========================
+           زر الوسط
+        ========================= */
+
+        .button-talk {
+
+            position: absolute;
+
+            width: 18%;
+            height: 8%;
+
+            left: 41%;
+            top: 52%;
+
+            border: 0;
+
+            border-radius: 30px;
+
+            background: rgba(255,255,255,0.01);
+
+            cursor: pointer;
+
+            z-index: 10;
+        }
+
+
+        /* =========================
+           زر اليمين
+        ========================= */
+
+        .button-right {
+
+            position: absolute;
+
+            width: 8%;
+            height: 8%;
+
+            left: 58%;
+            top: 52%;
+
+            border: 0;
+
+            border-radius: 50%;
+
+            background: rgba(255,255,255,0.01);
+
+            cursor: pointer;
+
+            z-index: 10;
+        }
+
+
+        /* تأثير الضغط */
+
+        .button-left:active,
+        .button-talk:active,
+        .button-right:active {
+
+            background: rgba(255,255,255,.25);
+
+            transform: scale(.92);
+        }
+
+
+        /* =========================
+           حالة التحدث
+        ========================= */
+
+        .talking {
+
+            position: absolute;
+
+            left: 50%;
+            bottom: 4%;
+
+            transform: translateX(-50%);
+
+            background: rgba(0,0,0,.75);
+
+            color: white;
+
+            padding: 8px 18px;
+
+            border-radius: 20px;
+
+            font-size: 14px;
+
+            display: none;
+
+            z-index: 20;
+        }
+
+        .talking.show {
             display: block;
         }
 
@@ -36,14 +206,149 @@
 
 </head>
 
+
 <body>
 
-    <!-- صورة اللاسلكي -->
-    <img
-        class="radio"
-        src="radio.jpg"
-        alt="اللاسلكي"
-    >
+
+<div class="radio">
+
+
+    <!-- الشاشة الحقيقية -->
+    <div
+        id="screen"
+        class="screen">
+
+        88
+
+    </div>
+
+
+    <!-- زر القناة السابقة -->
+    <button
+        id="previous"
+        class="button-left"
+        aria-label="القناة السابقة">
+    </button>
+
+
+    <!-- زر التحدث -->
+    <button
+        id="talk"
+        class="button-talk"
+        aria-label="التحدث">
+    </button>
+
+
+    <!-- زر القناة التالية -->
+    <button
+        id="next"
+        class="button-right"
+        aria-label="القناة التالية">
+    </button>
+
+
+    <div
+        id="talking"
+        class="talking">
+
+        🎙️ جاري التحدث...
+
+    </div>
+
+</div>
+
+
+<script>
+
+    let channel = 88;
+
+
+    const screen =
+        document.getElementById("screen");
+
+
+    const previous =
+        document.getElementById("previous");
+
+
+    const next =
+        document.getElementById("next");
+
+
+    const talk =
+        document.getElementById("talk");
+
+
+    const talking =
+        document.getElementById("talking");
+
+
+    /*
+    =========================
+    القناة السابقة
+    =========================
+    */
+
+    previous.addEventListener("click", function () {
+
+        channel--;
+
+        if (channel < 1) {
+            channel = 99;
+        }
+
+        screen.textContent = channel;
+
+    });
+
+
+    /*
+    =========================
+    القناة التالية
+    =========================
+    */
+
+    next.addEventListener("click", function () {
+
+        channel++;
+
+        if (channel > 99) {
+            channel = 1;
+        }
+
+        screen.textContent = channel;
+
+    });
+
+
+    /*
+    =========================
+    زر التحدث
+    =========================
+    */
+
+    talk.addEventListener("pointerdown", function () {
+
+        talking.classList.add("show");
+
+    });
+
+
+    talk.addEventListener("pointerup", function () {
+
+        talking.classList.remove("show");
+
+    });
+
+
+    talk.addEventListener("pointercancel", function () {
+
+        talking.classList.remove("show");
+
+    });
+
+</script>
+
 
 </body>
 
