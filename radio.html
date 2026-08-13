@@ -1,735 +1,764 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
-
+<html lang="ar">
 <head>
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-    <title>Walkie Talkie</title>
-
-    <style>
-
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        html,
-        body {
-            margin: 0;
-            width: 100%;
-            min-height: 100%;
-        }
-
-        body {
-            background:
-                radial-gradient(
-                    circle at center,
-                    #292929 0%,
-                    #111 55%,
-                    #050505 100%
-                );
-
-            color: white;
-
-            font-family:
-                Arial,
-                sans-serif;
-
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
-            min-height: 100vh;
-
-            overflow: hidden;
-        }
-
-
-        /* =================================
-           الجهاز
-        ================================= */
-
-        .radio {
-
-            width: min(92vw, 430px);
-
-            min-height: 650px;
-
-            position: relative;
-
-            padding: 22px 18px 25px;
-
-            border-radius: 48px 48px 35px 35px;
-
-            background:
-                linear-gradient(
-                    145deg,
-                    #3d3d3d,
-                    #191919 40%,
-                    #080808
-                );
-
-            box-shadow:
-                0 30px 70px rgba(0,0,0,.8),
-                inset 0 2px 2px rgba(255,255,255,.08),
-                inset 0 -8px 20px rgba(0,0,0,.8);
-
-            border: 2px solid #444;
-
-            display: flex;
-
-            flex-direction: column;
-
-            align-items: center;
-        }
-
-
-        /* =================================
-           الهوائي
-        ================================= */
-
-        .antenna {
-
-            position: absolute;
-
-            top: -75px;
-
-            right: 45px;
-
-            width: 34px;
-
-            height: 105px;
-
-            border-radius: 18px 18px 7px 7px;
-
-            background:
-                linear-gradient(
-                    90deg,
-                    #111,
-                    #555,
-                    #161616
-                );
-
-            box-shadow:
-                inset 2px 0 3px rgba(255,255,255,.12),
-                5px 8px 12px rgba(0,0,0,.5);
-
-            transform: rotate(4deg);
-        }
-
-
-        /* =================================
-           مفتاح علوي
-        ================================= */
-
-        .top-knob {
-
-            position: absolute;
-
-            top: -28px;
-
-            left: 48px;
-
-            width: 52px;
-
-            height: 35px;
-
-            border-radius: 12px 12px 6px 6px;
-
-            background:
-                repeating-linear-gradient(
-                    90deg,
-                    #111 0px,
-                    #111 5px,
-                    #555 6px,
-                    #151515 9px
-                );
-
-            border: 2px solid #222;
-
-            box-shadow:
-                0 5px 10px #000;
-        }
-
-
-        /* =================================
-           اسم الجهاز
-        ================================= */
-
-        .brand {
-
-            margin-top: 5px;
-
-            font-size: 13px;
-
-            letter-spacing: 4px;
-
-            color: #aaa;
-
-            text-transform: uppercase;
-        }
-
-
-        /* =================================
-           الشاشة
-        ================================= */
-
-        .screen-frame {
-
-            width: 78%;
-
-            height: 112px;
-
-            margin-top: 22px;
-
-            padding: 10px;
-
-            border-radius: 18px;
-
-            background:
-                linear-gradient(
-                    145deg,
-                    #444,
-                    #151515
-                );
-
-            border: 3px solid #080808;
-
-            box-shadow:
-                inset 0 0 0 2px #555,
-                0 8px 15px rgba(0,0,0,.6);
-        }
-
-
-        .screen {
-
-            width: 100%;
-
-            height: 100%;
-
-            border-radius: 9px;
-
-            background:
-                linear-gradient(
-                    180deg,
-                    #ffbe24,
-                    #f29400
-                );
-
-            border: 3px solid #7a4800;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            color: #111;
-
-            font-family: monospace;
-
-            font-weight: bold;
-
-            font-size: 55px;
-
-            letter-spacing: 5px;
-
-            text-shadow:
-                2px 2px 0 rgba(0,0,0,.15);
-
-            box-shadow:
-                inset 0 0 15px rgba(255,255,255,.25);
-        }
-
-
-        .screen-status {
-
-            position: absolute;
-
-            margin-top: 68px;
-
-            font-family: Arial;
-
-            font-size: 10px;
-
-            letter-spacing: 1px;
-
-            color: #332000;
-        }
-
-
-        /* =================================
-           أزرار التحكم
-        ================================= */
-
-        .controls {
-
-            display: flex;
-
-            justify-content: center;
-
-            align-items: center;
-
-            gap: 16px;
-
-            width: 100%;
-
-            margin-top: 25px;
-        }
-
-
-        .control {
-
-            border: 0;
-
-            width: 72px;
-
-            height: 58px;
-
-            border-radius: 17px;
-
-            background:
-                linear-gradient(
-                    145deg,
-                    #eeeeee,
-                    #a9a9a9
-                );
-
-            color: #111;
-
-            font-size: 15px;
-
-            font-weight: bold;
-
-            box-shadow:
-                0 5px 0 #555,
-                0 8px 12px rgba(0,0,0,.5);
-
-            cursor: pointer;
-
-            transition:
-                transform .08s,
-                box-shadow .08s;
-        }
-
-
-        .control:active {
-
-            transform: translateY(5px);
-
-            box-shadow:
-                0 0 0 #555,
-                0 3px 7px rgba(0,0,0,.5);
-        }
-
-
-        .scan {
-
-            width: 92px;
-
-            background:
-                linear-gradient(
-                    145deg,
-                    #eeeeee,
-                    #bdbdbd
-                );
-        }
-
-
-        /* =================================
-           السماعة
-        ================================= */
-
-        .speaker {
-
-            width: 78%;
-
-            height: 170px;
-
-            margin-top: 30px;
-
-            border-radius: 45px;
-
-            background:
-                linear-gradient(
-                    145deg,
-                    #222,
-                    #090909
-                );
-
-            border: 3px solid #444;
-
-            box-shadow:
-                inset 0 5px 10px rgba(255,255,255,.05),
-                0 8px 15px rgba(0,0,0,.5);
-
-            padding: 22px;
-
-            display: grid;
-
-            grid-template-columns:
-                repeat(4, 1fr);
-
-            grid-auto-rows: 14px;
-
-            gap: 12px;
-        }
-
-
-        .speaker-hole {
-
-            height: 8px;
-
-            border-radius: 8px;
-
-            background: #030303;
-
-            box-shadow:
-                inset 0 1px 2px #555;
-        }
-
-
-        /* =================================
-           أزرار إضافية
-        ================================= */
-
-        .bottom-controls {
-
-            display: flex;
-
-            gap: 18px;
-
-            margin-top: 25px;
-        }
-
-
-        .small-button {
-
-            width: 75px;
-
-            height: 43px;
-
-            border-radius: 14px;
-
-            border: 0;
-
-            background:
-                linear-gradient(
-                    #eee,
-                    #aaa
-                );
-
-            color: #111;
-
-            font-weight: bold;
-
-            box-shadow:
-                0 4px 0 #555;
-
-            cursor: pointer;
-        }
-
-
-        .small-button:active {
-
-            transform: translateY(4px);
-
-            box-shadow:
-                0 0 0 #555;
-        }
-
-
-        /* =================================
-           زر PTT
-        ================================= */
-
-        .ptt {
-
-            position: absolute;
-
-            left: -16px;
-
-            top: 300px;
-
-            width: 32px;
-
-            height: 120px;
-
-            border: 0;
-
-            border-radius: 8px;
-
-            background:
-                linear-gradient(
-                    90deg,
-                    #111,
-                    #555,
-                    #151515
-                );
-
-            box-shadow:
-                4px 8px 10px rgba(0,0,0,.6);
-
-            cursor: pointer;
-        }
-
-
-        .ptt:active {
-
-            transform: translateX(5px);
-        }
-
-
-        /* =================================
-           حالة التحدث
-        ================================= */
-
-        .talking {
-
-            position: fixed;
-
-            left: 50%;
-
-            bottom: 25px;
-
-            transform: translateX(-50%);
-
-            padding: 12px 22px;
-
-            border-radius: 30px;
-
-            background:
-                rgba(20,20,20,.95);
-
-            border: 1px solid #555;
-
-            color: white;
-
-            font-size: 15px;
-
-            display: none;
-
-            z-index: 100;
-        }
-
-
-        .talking.show {
-
-            display: block;
-        }
-
-
-        /* =================================
-           حالة SCAN
-        ================================= */
-
-        .scanning {
-
-            animation:
-                screenFlash .5s infinite alternate;
-        }
-
-
-        @keyframes screenFlash {
-
-            from {
-                opacity: .65;
-            }
-
-            to {
-                opacity: 1;
-            }
-
-        }
-
-
-        /* =================================
-           الهاتف
-        ================================= */
-
-        @media (max-height: 700px) {
-
-            .radio {
-
-                transform: scale(.85);
-
-            }
-
-        }
-
-    </style>
-
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0,
+               maximum-scale=1.0,user-scalable=no">
+
+<title>MECID Radio</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+    margin:0;
+    padding:0;
+    width:100%;
+    min-height:100%;
+    background:#000;
+}
+
+body{
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    overflow-x:hidden;
+}
+
+/* نفس أبعاد الصورة */
+.radio{
+    position:relative;
+    width:min(100vw,691px);
+    aspect-ratio:691 / 1536;
+
+    background-image:url("radio.jpg");
+    background-size:100% 100%;
+    background-repeat:no-repeat;
+
+    user-select:none;
+}
+
+/* طبقة التحكم */
+.button{
+    position:absolute;
+    border:0;
+    background:transparent;
+    cursor:pointer;
+    padding:0;
+    z-index:20;
+    -webkit-tap-highlight-color:transparent;
+}
+
+.button:active{
+    transform:scale(.96);
+}
+
+/* =========================================
+   أزرار الصورة
+   ========================================= */
+
+/* زر التشغيل */
+.power{
+    left:16.5%;
+    top:24%;
+    width:13%;
+    height:7%;
+}
+
+/* RP */
+.rp{
+    left:74%;
+    top:24%;
+    width:9%;
+    height:6%;
+}
+
+/* القفل */
+.lock{
+    left:82%;
+    top:35%;
+    width:8%;
+    height:5%;
+}
+
+/* P */
+.p-button{
+    left:82%;
+    top:39.5%;
+    width:8%;
+    height:5%;
+}
+
+/* V */
+.v-button{
+    left:82%;
+    top:44%;
+    width:8%;
+    height:5%;
+}
+
+/* العين */
+.eye{
+    left:82%;
+    top:48%;
+    width:8%;
+    height:5%;
+}
+
+/* + */
+.plus{
+    left:30%;
+    top:47%;
+    width:14%;
+    height:5%;
+}
+
+/* M */
+.memory{
+    left:50%;
+    top:47%;
+    width:12%;
+    height:5%;
+}
+
+/* - */
+.minus{
+    left:64%;
+    top:47%;
+    width:14%;
+    height:5%;
+}
+
+/* UP */
+.up{
+    left:27%;
+    top:53%;
+    width:15%;
+    height:8%;
+}
+
+/* SCAN */
+.scan{
+    left:45%;
+    top:53%;
+    width:18%;
+    height:8%;
+}
+
+/* DN */
+.down{
+    left:66%;
+    top:53%;
+    width:15%;
+    height:8%;
+}
+
+/* PTT */
+.ptt{
+    left:25%;
+    top:65%;
+    width:52%;
+    height:15%;
+}
+
+/* LOCAL */
+.local{
+    left:39%;
+    top:21%;
+    width:30%;
+    height:5%;
+}
+
+
+/* =========================================
+   شاشة رقم القناة
+   ========================================= */
+
+.channel{
+    position:absolute;
+
+    left:33.5%;
+    top:36.5%;
+
+    width:34%;
+    height:8%;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-family:
+        "Courier New",
+        monospace;
+
+    font-size:clamp(30px,9vw,70px);
+    font-weight:900;
+
+    color:#000;
+
+    pointer-events:none;
+
+    z-index:10;
+}
+
+/* =========================================
+   حالة الاتصال
+   ========================================= */
+
+.connection{
+    position:absolute;
+
+    left:0;
+    top:5%;
+
+    width:100%;
+
+    color:#ffd900;
+
+    font-family:Arial,sans-serif;
+    font-size:clamp(18px,4vw,32px);
+    font-weight:bold;
+
+    pointer-events:none;
+}
+
+/* =========================================
+   رسالة PTT
+   ========================================= */
+
+.status{
+    position:fixed;
+
+    left:50%;
+    bottom:20px;
+
+    transform:translateX(-50%);
+
+    padding:10px 20px;
+
+    border-radius:20px;
+
+    background:rgba(0,0,0,.85);
+    color:white;
+
+    font-family:Arial,sans-serif;
+    font-size:16px;
+
+    display:none;
+
+    z-index:100;
+}
+
+.status.show{
+    display:block;
+}
+
+
+/* =========================================
+   وميض SCAN
+   ========================================= */
+
+.scanning .channel{
+    animation:scanFlash .25s infinite alternate;
+}
+
+@keyframes scanFlash{
+    from{
+        opacity:.35;
+    }
+
+    to{
+        opacity:1;
+    }
+}
+</style>
 </head>
 
 
 <body>
 
+<div class="radio" id="radio">
 
-<div class="radio">
-
-
-    <div class="antenna"></div>
-
-    <div class="top-knob"></div>
-
-
-    <div class="brand">
-        MECID
+    <!-- حالة الاتصال -->
+    <div class="connection" id="connection">
+        Connecting...
     </div>
 
 
-    <!-- ==========================
-         الشاشة
-    =========================== -->
-
-    <div class="screen-frame">
-
-        <div
-            id="screen"
-            class="screen">
-
-            01
-
-        </div>
-
+    <!-- رقم القناة -->
+    <div class="channel" id="channel">
+        00
     </div>
 
 
-    <!-- ==========================
-         UP / SCAN / DN
-    =========================== -->
-
-    <div class="controls">
-
-
-        <button
-            id="up"
-            class="control">
-
-            ▲
-            <br>
-            UP
-
-        </button>
-
-
-        <button
-            id="scan"
-            class="control scan">
-
-            🔎
-            <br>
-            SCAN
-
-        </button>
-
-
-        <button
-            id="down"
-            class="control">
-
-            ▼
-            <br>
-            DN
-
-        </button>
-
-
-    </div>
-
-
-    <!-- ==========================
-         السماعة
-    =========================== -->
-
-    <div class="speaker">
-
-        <span class="speaker-hole"></span>
-        <span class="speaker-hole"></span>
-        <span class="speaker-hole"></span>
-        <span class="speaker-hole"></span>
-
-        <span class="speaker-hole"></span>
-        <span class="speaker-hole"></span>
-        <span class="speaker-hole"></span>
-        <span class="speaker-hole"></span>
-
-        <span class="speaker-hole"></span>
-        <span class="speaker-hole"></span>
-        <span class="speaker-hole"></span>
-        <span class="speaker-hole"></span>
-
-        <span class="speaker-hole"></span>
-        <span class="speaker-hole"></span>
-        <span class="speaker-hole"></span>
-        <span class="speaker-hole"></span>
-
-        <span class="speaker-hole"></span>
-        <span class="speaker-hole"></span>
-        <span class="speaker-hole"></span>
-        <span class="speaker-hole"></span>
-
-        <span class="speaker-hole"></span>
-        <span class="speaker-hole"></span>
-        <span class="speaker-hole"></span>
-        <span class="speaker-hole"></span>
-
-        <span class="speaker-hole"></span>
-        <span class="speaker-hole"></span>
-        <span class="speaker-hole"></span>
-        <span class="speaker-hole"></span>
-
-    </div>
-
-
-    <!-- ==========================
-         أزرار M / VOL
-    =========================== -->
-
-    <div class="bottom-controls">
-
-        <button
-            id="memory"
-            class="small-button">
-
-            M
-
-        </button>
-
-
-        <button
-            id="volume"
-            class="small-button">
-
-            VOL 5
-
-        </button>
-
-    </div>
-
-
-    <!-- ==========================
-         PTT
-    =========================== -->
-
+    <!-- LOCAL -->
     <button
-        id="ptt"
-        class="ptt"
-        aria-label="Push To Talk">
+        class="button local"
+        id="local"
+        aria-label="LOCAL">
     </button>
 
+
+    <!-- POWER -->
+    <button
+        class="button power"
+        id="power"
+        aria-label="Power">
+    </button>
+
+
+    <!-- RP -->
+    <button
+        class="button rp"
+        id="rp"
+        aria-label="RP">
+    </button>
+
+
+    <!-- LOCK -->
+    <button
+        class="button lock"
+        id="lock"
+        aria-label="Lock">
+    </button>
+
+
+    <!-- P -->
+    <button
+        class="button p-button"
+        id="p"
+        aria-label="P">
+    </button>
+
+
+    <!-- V -->
+    <button
+        class="button v-button"
+        id="v"
+        aria-label="V">
+    </button>
+
+
+    <!-- EYE -->
+    <button
+        class="button eye"
+        id="eye"
+        aria-label="Eye">
+    </button>
+
+
+    <!-- + -->
+    <button
+        class="button plus"
+        id="plus"
+        aria-label="Plus">
+    </button>
+
+
+    <!-- M -->
+    <button
+        class="button memory"
+        id="memory"
+        aria-label="Memory">
+    </button>
+
+
+    <!-- - -->
+    <button
+        class="button minus"
+        id="minus"
+        aria-label="Minus">
+    </button>
+
+
+    <!-- UP -->
+    <button
+        class="button up"
+        id="up"
+        aria-label="UP">
+    </button>
+
+
+    <!-- SCAN -->
+    <button
+        class="button scan"
+        id="scan"
+        aria-label="SCAN">
+    </button>
+
+
+    <!-- DN -->
+    <button
+        class="button down"
+        id="down"
+        aria-label="DN">
+    </button>
+
+
+    <!-- PTT -->
+    <button
+        class="button ptt"
+        id="ptt"
+        aria-label="Push To Talk">
+    </button>
 
 </div>
 
 
-<!-- حالة التحدث -->
-
 <div
-    id="talking"
-    class="talking">
+    class="status"
+    id="status">
+</div>
 
-    🎙️
+
+<script>
+
+let channel = 0;
+let volume = 5;
+let powered = true;
+let locked = false;
+let scanning = false;
+let scanTimer = null;
+
+
+/* تحديث الشاشة */
+
+function updateChannel(){
+
+    document.getElementById("channel").textContent =
+        String(channel).padStart(2,"0");
+
+}
+
+
+/* رسالة */
+
+function message(text){
+
+    const status =
+        document.getElementById("status");
+
+    status.textContent = text;
+
+    status.classList.add("show");
+
+    clearTimeout(status.hideTimer);
+
+    status.hideTimer =
+        setTimeout(() => {
+
+            status.classList.remove("show");
+
+        },1200);
+}
+
+
+/* =========================================
+   UP
+   ========================================= */
+
+document.getElementById("up").onclick = function(){
+
+    if(!powered || locked) return;
+
+    channel++;
+
+    if(channel > 99){
+        channel = 0;
+    }
+
+    updateChannel();
+
+};
+
+
+/* =========================================
+   DN
+   ========================================= */
+
+document.getElementById("down").onclick = function(){
+
+    if(!powered || locked) return;
+
+    channel--;
+
+    if(channel < 0){
+        channel = 99;
+    }
+
+    updateChannel();
+
+};
+
+
+/* =========================================
+   SCAN
+   ========================================= */
+
+document.getElementById("scan").onclick = function(){
+
+    if(!powered || locked) return;
+
+    if(scanning){
+
+        stopScan();
+
+        return;
+    }
+
+    scanning = true;
+
+    document
+        .getElementById("radio")
+        .classList.add("scanning");
+
+    scanTimer = setInterval(() => {
+
+        channel++;
+
+        if(channel > 99){
+            channel = 0;
+        }
+
+        updateChannel();
+
+    },400);
+
+};
+
+
+/* إيقاف المسح */
+
+function stopScan(){
+
+    scanning = false;
+
+    clearInterval(scanTimer);
+
+    document
+        .getElementById("radio")
+        .classList.remove("scanning");
+
+}
+
+
+/* =========================================
+   POWER
+   ========================================= */
+
+document.getElementById("power").onclick = function(){
+
+    powered = !powered;
+
+    if(!powered){
+
+        stopScan();
+
+        document.getElementById("channel")
+            .textContent = "--";
+
+        message("Radio OFF");
+
+    }else{
+
+        updateChannel();
+
+        message("Radio ON");
+
+    }
+
+};
+
+
+/* =========================================
+   LOCK
+   ========================================= */
+
+document.getElementById("lock").onclick = function(){
+
+    locked = !locked;
+
+    message(
+        locked
+        ? "Locked"
+        : "Unlocked"
+    );
+
+};
+
+
+/* =========================================
+   +
+   ========================================= */
+
+document.getElementById("plus").onclick = function(){
+
+    if(!powered || locked) return;
+
+    volume++;
+
+    if(volume > 10){
+        volume = 10;
+    }
+
+    message("VOL " + volume);
+
+};
+
+
+/* =========================================
+   -
+   ========================================= */
+
+document.getElementById("minus").onclick = function(){
+
+    if(!powered || locked) return;
+
+    volume--;
+
+    if(volume < 0){
+        volume = 0;
+    }
+
+    message("VOL " + volume);
+
+};
+
+
+/* =========================================
+   V
+   ========================================= */
+
+document.getElementById("v").onclick = function(){
+
+    message("Volume " + volume);
+
+};
+
+
+/* =========================================
+   M
+   ========================================= */
+
+document.getElementById("memory").onclick = function(){
+
+    if(!powered) return;
+
+    message("Memory");
+
+};
+
+
+/* =========================================
+   P
+   ========================================= */
+
+document.getElementById("p").onclick = function(){
+
+    if(!powered) return;
+
+    message("P");
+
+};
+
+
+/* =========================================
+   RP
+   ========================================= */
+
+document.getElementById("rp").onclick = function(){
+
+    if(!powered) return;
+
+    message("RP");
+
+};
+
+
+/* =========================================
+   LOCAL
+   ========================================= */
+
+document.getElementById("local").onclick = function(){
+
+    if(!powered) return;
+
+    message("LOCAL");
+
+};
+
+
+/* =========================================
+   EYE
+   ========================================= */
+
+document.getElementById("eye").onclick = function(){
+
+    if(!powered) return;
+
+    message("Monitor");
+
+};
+
+
+/* =========================================
+   PTT
+   ========================================= */
+
+const ptt =
+    document.getElementById("ptt");
+
+function startPTT(){
+
+    if(!powered || locked) return;
+
+    message("🎙️ PTT");
+
+}
+
+function stopPTT(){
+
+    if(!powered) return;
+
+    message("PTT OFF");
+
+}
+
+
+ptt.addEventListener(
+    "pointerdown",
+    startPTT
+);
+
+ptt.addEventListener(
+    "pointerup",
+    stopPTT
+);
+
+ptt.addEventListener(
+    "pointercancel",
+    stopPTT
+);
+
+
+/* =========================================
+   البداية
+   ========================================= */
+
+updateChannel();
+
+setTimeout(() => {
+
+    document.getElementById("connection")
+        .textContent = "Connected";
+
+},1500);
+
+</script>
+
+</body>
+</html>
