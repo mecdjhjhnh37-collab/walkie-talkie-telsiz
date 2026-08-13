@@ -3,8 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <title>Walkie Talkie</title>
 
@@ -15,191 +17,548 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        html,
         body {
             margin: 0;
-            min-height: 100vh;
-
-            background: #101010;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            overflow: hidden;
-
-            font-family: Arial, sans-serif;
+            width: 100%;
+            min-height: 100%;
         }
 
-        .radio {
-            position: relative;
-
-            width: min(100vw, 700px);
-            aspect-ratio: 1 / 1;
-
-            background-image: url("radio.jpg");
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-
-        /* =========================
-           الشاشة
-        ========================= */
-
-        .screen {
-            position: absolute;
-
-            width: 20%;
-            height: 11%;
-
-            left: 40%;
-            top: 35%;
-
-            background: #ffae00;
-
-            border-radius: 8px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            font-family: monospace;
-
-            font-size: clamp(25px, 7vw, 55px);
-
-            color: #111;
-
-            text-shadow:
-                1px 1px 0 #222;
-
-            box-shadow:
-                inset 0 0 10px rgba(0,0,0,.3);
-
-            z-index: 5;
-        }
-
-
-        /* =========================
-           زر اليسار
-        ========================= */
-
-        .button-left {
-
-            position: absolute;
-
-            width: 8%;
-            height: 8%;
-
-            left: 34%;
-            top: 52%;
-
-            border: 0;
-
-            border-radius: 50%;
-
-            background: rgba(255,255,255,0.01);
-
-            cursor: pointer;
-
-            z-index: 10;
-        }
-
-
-        /* =========================
-           زر الوسط
-        ========================= */
-
-        .button-talk {
-
-            position: absolute;
-
-            width: 18%;
-            height: 8%;
-
-            left: 41%;
-            top: 52%;
-
-            border: 0;
-
-            border-radius: 30px;
-
-            background: rgba(255,255,255,0.01);
-
-            cursor: pointer;
-
-            z-index: 10;
-        }
-
-
-        /* =========================
-           زر اليمين
-        ========================= */
-
-        .button-right {
-
-            position: absolute;
-
-            width: 8%;
-            height: 8%;
-
-            left: 58%;
-            top: 52%;
-
-            border: 0;
-
-            border-radius: 50%;
-
-            background: rgba(255,255,255,0.01);
-
-            cursor: pointer;
-
-            z-index: 10;
-        }
-
-
-        /* تأثير الضغط */
-
-        .button-left:active,
-        .button-talk:active,
-        .button-right:active {
-
-            background: rgba(255,255,255,.25);
-
-            transform: scale(.92);
-        }
-
-
-        /* =========================
-           حالة التحدث
-        ========================= */
-
-        .talking {
-
-            position: absolute;
-
-            left: 50%;
-            bottom: 4%;
-
-            transform: translateX(-50%);
-
-            background: rgba(0,0,0,.75);
+        body {
+            background:
+                radial-gradient(
+                    circle at center,
+                    #292929 0%,
+                    #111 55%,
+                    #050505 100%
+                );
 
             color: white;
 
-            padding: 8px 18px;
+            font-family:
+                Arial,
+                sans-serif;
 
-            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
 
-            font-size: 14px;
+            min-height: 100vh;
+
+            overflow: hidden;
+        }
+
+
+        /* =================================
+           الجهاز
+        ================================= */
+
+        .radio {
+
+            width: min(92vw, 430px);
+
+            min-height: 650px;
+
+            position: relative;
+
+            padding: 22px 18px 25px;
+
+            border-radius: 48px 48px 35px 35px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #3d3d3d,
+                    #191919 40%,
+                    #080808
+                );
+
+            box-shadow:
+                0 30px 70px rgba(0,0,0,.8),
+                inset 0 2px 2px rgba(255,255,255,.08),
+                inset 0 -8px 20px rgba(0,0,0,.8);
+
+            border: 2px solid #444;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+        }
+
+
+        /* =================================
+           الهوائي
+        ================================= */
+
+        .antenna {
+
+            position: absolute;
+
+            top: -75px;
+
+            right: 45px;
+
+            width: 34px;
+
+            height: 105px;
+
+            border-radius: 18px 18px 7px 7px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #111,
+                    #555,
+                    #161616
+                );
+
+            box-shadow:
+                inset 2px 0 3px rgba(255,255,255,.12),
+                5px 8px 12px rgba(0,0,0,.5);
+
+            transform: rotate(4deg);
+        }
+
+
+        /* =================================
+           مفتاح علوي
+        ================================= */
+
+        .top-knob {
+
+            position: absolute;
+
+            top: -28px;
+
+            left: 48px;
+
+            width: 52px;
+
+            height: 35px;
+
+            border-radius: 12px 12px 6px 6px;
+
+            background:
+                repeating-linear-gradient(
+                    90deg,
+                    #111 0px,
+                    #111 5px,
+                    #555 6px,
+                    #151515 9px
+                );
+
+            border: 2px solid #222;
+
+            box-shadow:
+                0 5px 10px #000;
+        }
+
+
+        /* =================================
+           اسم الجهاز
+        ================================= */
+
+        .brand {
+
+            margin-top: 5px;
+
+            font-size: 13px;
+
+            letter-spacing: 4px;
+
+            color: #aaa;
+
+            text-transform: uppercase;
+        }
+
+
+        /* =================================
+           الشاشة
+        ================================= */
+
+        .screen-frame {
+
+            width: 78%;
+
+            height: 112px;
+
+            margin-top: 22px;
+
+            padding: 10px;
+
+            border-radius: 18px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #444,
+                    #151515
+                );
+
+            border: 3px solid #080808;
+
+            box-shadow:
+                inset 0 0 0 2px #555,
+                0 8px 15px rgba(0,0,0,.6);
+        }
+
+
+        .screen {
+
+            width: 100%;
+
+            height: 100%;
+
+            border-radius: 9px;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #ffbe24,
+                    #f29400
+                );
+
+            border: 3px solid #7a4800;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            color: #111;
+
+            font-family: monospace;
+
+            font-weight: bold;
+
+            font-size: 55px;
+
+            letter-spacing: 5px;
+
+            text-shadow:
+                2px 2px 0 rgba(0,0,0,.15);
+
+            box-shadow:
+                inset 0 0 15px rgba(255,255,255,.25);
+        }
+
+
+        .screen-status {
+
+            position: absolute;
+
+            margin-top: 68px;
+
+            font-family: Arial;
+
+            font-size: 10px;
+
+            letter-spacing: 1px;
+
+            color: #332000;
+        }
+
+
+        /* =================================
+           أزرار التحكم
+        ================================= */
+
+        .controls {
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 16px;
+
+            width: 100%;
+
+            margin-top: 25px;
+        }
+
+
+        .control {
+
+            border: 0;
+
+            width: 72px;
+
+            height: 58px;
+
+            border-radius: 17px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #eeeeee,
+                    #a9a9a9
+                );
+
+            color: #111;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            box-shadow:
+                0 5px 0 #555,
+                0 8px 12px rgba(0,0,0,.5);
+
+            cursor: pointer;
+
+            transition:
+                transform .08s,
+                box-shadow .08s;
+        }
+
+
+        .control:active {
+
+            transform: translateY(5px);
+
+            box-shadow:
+                0 0 0 #555,
+                0 3px 7px rgba(0,0,0,.5);
+        }
+
+
+        .scan {
+
+            width: 92px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #eeeeee,
+                    #bdbdbd
+                );
+        }
+
+
+        /* =================================
+           السماعة
+        ================================= */
+
+        .speaker {
+
+            width: 78%;
+
+            height: 170px;
+
+            margin-top: 30px;
+
+            border-radius: 45px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #222,
+                    #090909
+                );
+
+            border: 3px solid #444;
+
+            box-shadow:
+                inset 0 5px 10px rgba(255,255,255,.05),
+                0 8px 15px rgba(0,0,0,.5);
+
+            padding: 22px;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            grid-auto-rows: 14px;
+
+            gap: 12px;
+        }
+
+
+        .speaker-hole {
+
+            height: 8px;
+
+            border-radius: 8px;
+
+            background: #030303;
+
+            box-shadow:
+                inset 0 1px 2px #555;
+        }
+
+
+        /* =================================
+           أزرار إضافية
+        ================================= */
+
+        .bottom-controls {
+
+            display: flex;
+
+            gap: 18px;
+
+            margin-top: 25px;
+        }
+
+
+        .small-button {
+
+            width: 75px;
+
+            height: 43px;
+
+            border-radius: 14px;
+
+            border: 0;
+
+            background:
+                linear-gradient(
+                    #eee,
+                    #aaa
+                );
+
+            color: #111;
+
+            font-weight: bold;
+
+            box-shadow:
+                0 4px 0 #555;
+
+            cursor: pointer;
+        }
+
+
+        .small-button:active {
+
+            transform: translateY(4px);
+
+            box-shadow:
+                0 0 0 #555;
+        }
+
+
+        /* =================================
+           زر PTT
+        ================================= */
+
+        .ptt {
+
+            position: absolute;
+
+            left: -16px;
+
+            top: 300px;
+
+            width: 32px;
+
+            height: 120px;
+
+            border: 0;
+
+            border-radius: 8px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #111,
+                    #555,
+                    #151515
+                );
+
+            box-shadow:
+                4px 8px 10px rgba(0,0,0,.6);
+
+            cursor: pointer;
+        }
+
+
+        .ptt:active {
+
+            transform: translateX(5px);
+        }
+
+
+        /* =================================
+           حالة التحدث
+        ================================= */
+
+        .talking {
+
+            position: fixed;
+
+            left: 50%;
+
+            bottom: 25px;
+
+            transform: translateX(-50%);
+
+            padding: 12px 22px;
+
+            border-radius: 30px;
+
+            background:
+                rgba(20,20,20,.95);
+
+            border: 1px solid #555;
+
+            color: white;
+
+            font-size: 15px;
 
             display: none;
 
-            z-index: 20;
+            z-index: 100;
         }
 
+
         .talking.show {
+
             display: block;
+        }
+
+
+        /* =================================
+           حالة SCAN
+        ================================= */
+
+        .scanning {
+
+            animation:
+                screenFlash .5s infinite alternate;
+        }
+
+
+        @keyframes screenFlash {
+
+            from {
+                opacity: .65;
+            }
+
+            to {
+                opacity: 1;
+            }
+
+        }
+
+
+        /* =================================
+           الهاتف
+        ================================= */
+
+        @media (max-height: 700px) {
+
+            .radio {
+
+                transform: scale(.85);
+
+            }
+
         }
 
     </style>
@@ -213,143 +572,164 @@
 <div class="radio">
 
 
-    <!-- الشاشة الحقيقية -->
-    <div
-        id="screen"
-        class="screen">
+    <div class="antenna"></div>
 
-        88
+    <div class="top-knob"></div>
+
+
+    <div class="brand">
+        MECID
+    </div>
+
+
+    <!-- ==========================
+         الشاشة
+    =========================== -->
+
+    <div class="screen-frame">
+
+        <div
+            id="screen"
+            class="screen">
+
+            01
+
+        </div>
 
     </div>
 
 
-    <!-- زر القناة السابقة -->
-    <button
-        id="previous"
-        class="button-left"
-        aria-label="القناة السابقة">
-    </button>
+    <!-- ==========================
+         UP / SCAN / DN
+    =========================== -->
+
+    <div class="controls">
 
 
-    <!-- زر التحدث -->
-    <button
-        id="talk"
-        class="button-talk"
-        aria-label="التحدث">
-    </button>
+        <button
+            id="up"
+            class="control">
+
+            ▲
+            <br>
+            UP
+
+        </button>
 
 
-    <!-- زر القناة التالية -->
-    <button
-        id="next"
-        class="button-right"
-        aria-label="القناة التالية">
-    </button>
+        <button
+            id="scan"
+            class="control scan">
+
+            🔎
+            <br>
+            SCAN
+
+        </button>
 
 
-    <div
-        id="talking"
-        class="talking">
+        <button
+            id="down"
+            class="control">
 
-        🎙️ جاري التحدث...
+            ▼
+            <br>
+            DN
+
+        </button>
+
 
     </div>
+
+
+    <!-- ==========================
+         السماعة
+    =========================== -->
+
+    <div class="speaker">
+
+        <span class="speaker-hole"></span>
+        <span class="speaker-hole"></span>
+        <span class="speaker-hole"></span>
+        <span class="speaker-hole"></span>
+
+        <span class="speaker-hole"></span>
+        <span class="speaker-hole"></span>
+        <span class="speaker-hole"></span>
+        <span class="speaker-hole"></span>
+
+        <span class="speaker-hole"></span>
+        <span class="speaker-hole"></span>
+        <span class="speaker-hole"></span>
+        <span class="speaker-hole"></span>
+
+        <span class="speaker-hole"></span>
+        <span class="speaker-hole"></span>
+        <span class="speaker-hole"></span>
+        <span class="speaker-hole"></span>
+
+        <span class="speaker-hole"></span>
+        <span class="speaker-hole"></span>
+        <span class="speaker-hole"></span>
+        <span class="speaker-hole"></span>
+
+        <span class="speaker-hole"></span>
+        <span class="speaker-hole"></span>
+        <span class="speaker-hole"></span>
+        <span class="speaker-hole"></span>
+
+        <span class="speaker-hole"></span>
+        <span class="speaker-hole"></span>
+        <span class="speaker-hole"></span>
+        <span class="speaker-hole"></span>
+
+    </div>
+
+
+    <!-- ==========================
+         أزرار M / VOL
+    =========================== -->
+
+    <div class="bottom-controls">
+
+        <button
+            id="memory"
+            class="small-button">
+
+            M
+
+        </button>
+
+
+        <button
+            id="volume"
+            class="small-button">
+
+            VOL 5
+
+        </button>
+
+    </div>
+
+
+    <!-- ==========================
+         PTT
+    =========================== -->
+
+    <button
+        id="ptt"
+        class="ptt"
+        aria-label="Push To Talk">
+    </button>
+
 
 </div>
 
 
-<script>
+<!-- حالة التحدث -->
 
-    let channel = 88;
+<div
+    id="talking"
+    class="talking">
 
-
-    const screen =
-        document.getElementById("screen");
-
-
-    const previous =
-        document.getElementById("previous");
-
-
-    const next =
-        document.getElementById("next");
-
-
-    const talk =
-        document.getElementById("talk");
-
-
-    const talking =
-        document.getElementById("talking");
-
-
-    /*
-    =========================
-    القناة السابقة
-    =========================
-    */
-
-    previous.addEventListener("click", function () {
-
-        channel--;
-
-        if (channel < 1) {
-            channel = 99;
-        }
-
-        screen.textContent = channel;
-
-    });
-
-
-    /*
-    =========================
-    القناة التالية
-    =========================
-    */
-
-    next.addEventListener("click", function () {
-
-        channel++;
-
-        if (channel > 99) {
-            channel = 1;
-        }
-
-        screen.textContent = channel;
-
-    });
-
-
-    /*
-    =========================
-    زر التحدث
-    =========================
-    */
-
-    talk.addEventListener("pointerdown", function () {
-
-        talking.classList.add("show");
-
-    });
-
-
-    talk.addEventListener("pointerup", function () {
-
-        talking.classList.remove("show");
-
-    });
-
-
-    talk.addEventListener("pointercancel", function () {
-
-        talking.classList.remove("show");
-
-    });
-
-</script>
-
-
-</body>
-
-</html>
+    🎙️
