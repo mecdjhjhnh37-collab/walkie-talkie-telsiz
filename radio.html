@@ -35,57 +35,87 @@ html, body {
     display: block;
 }
 
-/* الشاشة */
+/* منطقة شاشة الراديو */
 .screen {
     position: absolute;
-    width: 38%;
-    height: 13%;
+
+    /* مكان الشاشة */
     left: 31%;
-    top: 34%;
+    top: 39.8%;
+    width: 38%;
+    height: 11.5%;
+
     display: flex;
     justify-content: center;
     align-items: center;
+
     pointer-events: none;
+    z-index: 10;
 }
 
+/* إخفاء الرقم الأصلي الموجود بالصورة */
+.screen::before {
+    content: "";
+    position: absolute;
+
+    width: 43%;
+    height: 58%;
+
+    left: 28.5%;
+    top: 20%;
+
+    background: #08f31c;
+    border-radius: 5px;
+
+    z-index: 1;
+}
+
+/* الرقم الجديد */
 .number {
-    font-family: monospace;
-    font-size: clamp(45px, 12vw, 100px);
+    position: relative;
+    z-index: 2;
+
+    font-family: "Courier New", monospace;
+    font-size: clamp(45px, 10vw, 90px);
     font-weight: bold;
+    line-height: 1;
+
     color: #000;
+
+    letter-spacing: -4px;
 }
 
 /* الأزرار */
 button {
     position: absolute;
-    border: 0;
+    border: none;
     background: transparent;
     cursor: pointer;
-    z-index: 5;
+    z-index: 20;
 }
 
-/* + */
+/* زر + */
 .plus {
     width: 12%;
     height: 6%;
     left: 30%;
-    top: 50%;
+    top: 52%;
 }
 
-/* M */
+/* زر M */
 .mode {
     width: 12%;
     height: 6%;
     left: 44%;
-    top: 50%;
+    top: 52%;
 }
 
-/* - */
+/* زر - */
 .minus {
     width: 12%;
     height: 6%;
     left: 58%;
-    top: 50%;
+    top: 52%;
 }
 </style>
 </head>
@@ -94,22 +124,25 @@ button {
 
 <div class="radio">
 
-    <!-- غيّر الاسم فقط إذا اسم الصورة مختلف -->
+    <!-- صورة الراديو -->
     <img src="radio.png" class="radio-img">
 
+    <!-- الرقم داخل الشاشة -->
     <div class="screen">
         <div class="number" id="number">001</div>
     </div>
 
+    <!-- الأزرار -->
     <button class="plus" onclick="changeNumber(1)"></button>
 
-    <button class="mode" onclick="modeChange()"></button>
+    <button class="mode" onclick="changeNumber(1)"></button>
 
     <button class="minus" onclick="changeNumber(-1)"></button>
 
 </div>
 
 <script>
+
 let number = 1;
 
 function showNumber() {
@@ -118,25 +151,22 @@ function showNumber() {
 }
 
 function changeNumber(value) {
+
     number += value;
-
-    if (number > 999) number = 1;
-    if (number < 1) number = 999;
-
-    showNumber();
-}
-
-function modeChange() {
-    number++;
 
     if (number > 999) {
         number = 1;
+    }
+
+    if (number < 1) {
+        number = 999;
     }
 
     showNumber();
 }
 
 showNumber();
+
 </script>
 
 </body>
