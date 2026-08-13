@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
+
 <head>
 <meta charset="UTF-8">
 
 <meta name="viewport"
-      content="width=device-width, initial-scale=1.0,
-               maximum-scale=1.0,user-scalable=no">
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no">
 
 <title>MECID Radio</title>
 
@@ -16,8 +19,7 @@
     -webkit-tap-highlight-color:transparent;
 }
 
-html,
-body{
+html,body{
     margin:0;
     padding:0;
     width:100%;
@@ -30,232 +32,58 @@ body{
     justify-content:center;
     align-items:flex-start;
     overflow-x:hidden;
-    overflow-y:auto;
 }
 
-
-/* =========================================
+/* =========================
    الجهاز
-   ========================================= */
+========================= */
 
 .radio{
     position:relative;
 
-    /* أصغر شوي من السابق */
-    width:min(90vw,620px);
+    /* حجم مناسب للموبايل */
+    width:min(100vw,430px);
 
     aspect-ratio:691 / 1536;
 
     background-image:url("radio.jpg");
-
     background-size:100% 100%;
-
     background-repeat:no-repeat;
 
     user-select:none;
-
     flex-shrink:0;
 }
 
 
-/* =========================================
-   الأزرار الشفافة
-   ========================================= */
+/* =========================
+   كل الأزرار
+========================= */
 
 .button{
     position:absolute;
 
     border:0;
-
-    background:transparent;
-
     padding:0;
 
-    margin:0;
+    background:transparent;
 
     cursor:pointer;
 
     z-index:20;
 
-    outline:none;
-
-    appearance:none;
-
-    -webkit-appearance:none;
-
-    -webkit-tap-highlight-color:transparent;
-
     touch-action:manipulation;
 
-    user-select:none;
+    -webkit-tap-highlight-color:transparent;
 }
 
-
-/* تأثير الضغط فقط */
 .button:active{
     transform:scale(.94);
 }
 
 
-/* =========================================
-   POWER
-   ========================================= */
-
-.power{
-    left:16.5%;
-    top:24%;
-    width:13%;
-    height:7%;
-}
-
-
-/* =========================================
-   RP
-   ========================================= */
-
-.rp{
-    left:74%;
-    top:24%;
-    width:9%;
-    height:6%;
-}
-
-
-/* =========================================
-   LOCK
-   ========================================= */
-
-.lock{
-    left:82%;
-    top:35%;
-    width:8%;
-    height:5%;
-}
-
-
-/* =========================================
-   P
-   ========================================= */
-
-.p-button{
-    left:82%;
-    top:39.5%;
-    width:8%;
-    height:5%;
-}
-
-
-/* =========================================
-   V
-   ========================================= */
-
-.v-button{
-    left:82%;
-    top:44%;
-    width:8%;
-    height:5%;
-}
-
-
-/* =========================================
-   EYE
-   ========================================= */
-
-.eye{
-    left:82%;
-    top:48%;
-    width:8%;
-    height:5%;
-}
-
-
-/* =========================================
-   +
-   ========================================= */
-
-.plus{
-    left:30%;
-    top:47%;
-    width:14%;
-    height:5%;
-}
-
-
-/* =========================================
-   M
-   ========================================= */
-
-.memory{
-    left:50%;
-    top:47%;
-    width:12%;
-    height:5%;
-}
-
-
-/* =========================================
-   -
-   ========================================= */
-
-.minus{
-    left:64%;
-    top:47%;
-    width:14%;
-    height:5%;
-}
-
-
-/* =========================================
-   UP
-   ========================================= */
-
-.up{
-    left:27%;
-    top:53%;
-    width:15%;
-    height:8%;
-}
-
-
-/* =========================================
-   SCAN
-   ========================================= */
-
-.scan{
-    left:45%;
-    top:53%;
-    width:18%;
-    height:8%;
-}
-
-
-/* =========================================
-   DN
-   ========================================= */
-
-.down{
-    left:66%;
-    top:53%;
-    width:15%;
-    height:8%;
-}
-
-
-/* =========================================
-   PTT
-   ========================================= */
-
-.ptt{
-    left:25%;
-    top:65%;
-    width:52%;
-    height:15%;
-}
-
-
-/* =========================================
+/* =========================
    LOCAL
-   ========================================= */
+========================= */
 
 .local{
     left:39%;
@@ -265,9 +93,130 @@ body{
 }
 
 
-/* =========================================
-   شاشة القناة
-   ========================================= */
+/* =========================
+   POWER
+========================= */
+
+.power{
+    left:16.5%;
+    top:24%;
+    width:13%;
+    height:7%;
+}
+
+
+/* =========================
+   RP
+========================= */
+
+.rp{
+    left:74%;
+    top:24%;
+    width:9%;
+    height:6%;
+}
+
+
+/* =========================
+   الأزرار الجانبية
+========================= */
+
+.lock{
+    left:82%;
+    top:35%;
+    width:8%;
+    height:5%;
+}
+
+.p-button{
+    left:82%;
+    top:39.5%;
+    width:8%;
+    height:5%;
+}
+
+.v-button{
+    left:82%;
+    top:44%;
+    width:8%;
+    height:5%;
+}
+
+.eye{
+    left:82%;
+    top:48%;
+    width:8%;
+    height:5%;
+}
+
+
+/* =========================
+   + / M / -
+========================= */
+
+.plus{
+    left:30%;
+    top:47%;
+    width:14%;
+    height:5%;
+}
+
+.memory{
+    left:50%;
+    top:47%;
+    width:12%;
+    height:5%;
+}
+
+.minus{
+    left:64%;
+    top:47%;
+    width:14%;
+    height:5%;
+}
+
+
+/* =========================
+   UP / SCAN / DN
+========================= */
+
+.up{
+    left:27%;
+    top:53%;
+    width:15%;
+    height:8%;
+}
+
+.scan{
+    left:45%;
+    top:53%;
+    width:18%;
+    height:8%;
+}
+
+.down{
+    left:66%;
+    top:53%;
+    width:15%;
+    height:8%;
+}
+
+
+/* =========================
+   PTT
+========================= */
+
+.ptt{
+    left:25%;
+    top:65%;
+    width:52%;
+    height:15%;
+}
+
+
+/* =========================
+   رقم القناة
+========================= */
 
 .channel{
     position:absolute;
@@ -279,16 +228,14 @@ body{
     height:8%;
 
     display:flex;
-
-    justify-content:center;
-
     align-items:center;
+    justify-content:center;
 
     font-family:
         "Courier New",
         monospace;
 
-    font-size:clamp(30px,9vw,70px);
+    font-size:clamp(28px,8vw,58px);
 
     font-weight:900;
 
@@ -297,18 +244,19 @@ body{
     pointer-events:none;
 
     z-index:10;
+
+    letter-spacing:3px;
 }
 
 
-/* =========================================
+/* =========================
    Connecting
-   ========================================= */
+========================= */
 
 .connection{
     position:absolute;
 
     left:0;
-
     top:5%;
 
     width:100%;
@@ -317,7 +265,7 @@ body{
 
     font-family:Arial,sans-serif;
 
-    font-size:clamp(18px,4vw,32px);
+    font-size:clamp(17px,4vw,28px);
 
     font-weight:bold;
 
@@ -327,34 +275,35 @@ body{
 }
 
 
-/* =========================================
-   الرسائل
-   ========================================= */
+/* =========================
+   رسالة الحالة
+========================= */
 
 .status{
     position:fixed;
 
     left:50%;
-
     bottom:20px;
 
     transform:translateX(-50%);
 
-    padding:10px 20px;
+    padding:10px 18px;
 
     border-radius:20px;
 
-    background:rgba(0,0,0,.88);
+    background:rgba(0,0,0,.9);
 
-    color:white;
+    color:#fff;
 
     font-family:Arial,sans-serif;
 
-    font-size:16px;
+    font-size:15px;
 
     display:none;
 
-    z-index:100;
+    z-index:1000;
+
+    white-space:nowrap;
 }
 
 .status.show{
@@ -362,13 +311,12 @@ body{
 }
 
 
-/* =========================================
+/* =========================
    SCAN
-   ========================================= */
+========================= */
 
 .scanning .channel{
-    animation:
-        scanFlash .25s infinite alternate;
+    animation:scanFlash .25s infinite alternate;
 }
 
 @keyframes scanFlash{
@@ -384,19 +332,29 @@ body{
 }
 
 
-/* =========================================
-   الهاتف الصغير
-   ========================================= */
+/* =========================
+   الشاشات الصغيرة
+========================= */
 
-@media(max-width:400px){
+@media(max-width:360px){
 
     .radio{
-        width:88vw;
+        width:100vw;
     }
 
 }
 
+
+/* =========================
+   منع تحديد الصورة
+========================= */
+
+img{
+    pointer-events:none;
+}
+
 </style>
+
 </head>
 
 
@@ -406,35 +364,21 @@ body{
 <div class="radio" id="radio">
 
 
-    <!-- ================================
-         حالة الاتصال
-         ================================ -->
+    <!-- حالة الاتصال -->
 
-    <div
-        class="connection"
-        id="connection">
-
+    <div class="connection" id="connection">
         Connecting...
-
     </div>
 
 
-    <!-- ================================
-         الشاشة
-         ================================ -->
+    <!-- رقم القناة -->
 
-    <div
-        class="channel"
-        id="channel">
-
+    <div class="channel" id="channel">
         00
-
     </div>
 
 
-    <!-- ================================
-         LOCAL
-         ================================ -->
+    <!-- LOCAL -->
 
     <button
         class="button local"
@@ -443,9 +387,7 @@ body{
     </button>
 
 
-    <!-- ================================
-         POWER
-         ================================ -->
+    <!-- POWER -->
 
     <button
         class="button power"
@@ -454,9 +396,7 @@ body{
     </button>
 
 
-    <!-- ================================
-         RP
-         ================================ -->
+    <!-- RP -->
 
     <button
         class="button rp"
@@ -465,9 +405,7 @@ body{
     </button>
 
 
-    <!-- ================================
-         LOCK
-         ================================ -->
+    <!-- LOCK -->
 
     <button
         class="button lock"
@@ -476,9 +414,7 @@ body{
     </button>
 
 
-    <!-- ================================
-         P
-         ================================ -->
+    <!-- P -->
 
     <button
         class="button p-button"
@@ -487,9 +423,7 @@ body{
     </button>
 
 
-    <!-- ================================
-         V
-         ================================ -->
+    <!-- V -->
 
     <button
         class="button v-button"
@@ -498,31 +432,25 @@ body{
     </button>
 
 
-    <!-- ================================
-         EYE
-         ================================ -->
+    <!-- EYE -->
 
     <button
         class="button eye"
         id="eye"
-        aria-label="Eye">
+        aria-label="Monitor">
     </button>
 
 
-    <!-- ================================
-         +
-         ================================ -->
+    <!-- PLUS -->
 
     <button
         class="button plus"
         id="plus"
-        aria-label="Plus">
+        aria-label="Volume Up">
     </button>
 
 
-    <!-- ================================
-         M
-         ================================ -->
+    <!-- MEMORY -->
 
     <button
         class="button memory"
@@ -531,20 +459,16 @@ body{
     </button>
 
 
-    <!-- ================================
-         -
-         ================================ -->
+    <!-- MINUS -->
 
     <button
         class="button minus"
         id="minus"
-        aria-label="Minus">
+        aria-label="Volume Down">
     </button>
 
 
-    <!-- ================================
-         UP
-         ================================ -->
+    <!-- UP -->
 
     <button
         class="button up"
@@ -553,9 +477,7 @@ body{
     </button>
 
 
-    <!-- ================================
-         SCAN
-         ================================ -->
+    <!-- SCAN -->
 
     <button
         class="button scan"
@@ -564,9 +486,7 @@ body{
     </button>
 
 
-    <!-- ================================
-         DN
-         ================================ -->
+    <!-- DN -->
 
     <button
         class="button down"
@@ -575,9 +495,7 @@ body{
     </button>
 
 
-    <!-- ================================
-         PTT
-         ================================ -->
+    <!-- PTT -->
 
     <button
         class="button ptt"
@@ -589,10 +507,6 @@ body{
 </div>
 
 
-<!-- ================================
-     الرسالة
-     ================================ -->
-
 <div
     class="status"
     id="status">
@@ -600,11 +514,6 @@ body{
 
 
 <script>
-
-
-/* =========================================
-   المتغيرات
-   ========================================= */
 
 let channel = 0;
 
@@ -619,23 +528,22 @@ let scanning = false;
 let scanTimer = null;
 
 
-/* =========================================
+/* =========================
    تحديث القناة
-   ========================================= */
+========================= */
 
 function updateChannel(){
 
-    document
-        .getElementById("channel")
+    document.getElementById("channel")
         .textContent =
         String(channel).padStart(2,"0");
 
 }
 
 
-/* =========================================
-   الرسائل
-   ========================================= */
+/* =========================
+   رسالة
+========================= */
 
 function message(text){
 
@@ -646,29 +554,25 @@ function message(text){
 
     status.classList.add("show");
 
-    clearTimeout(status.hideTimer);
+    clearTimeout(status.timer);
 
-    status.hideTimer =
-        setTimeout(function(){
+    status.timer = setTimeout(function(){
 
-            status.classList.remove("show");
+        status.classList.remove("show");
 
-        },1200);
+    },1000);
 
 }
 
 
-/* =========================================
+/* =========================
    UP
-   ========================================= */
+========================= */
 
-document
-.getElementById("up")
-.addEventListener("click",function(){
+document.getElementById("up")
+.onclick = function(){
 
-    if(!powered || locked){
-        return;
-    }
+    if(!powered || locked) return;
 
     channel++;
 
@@ -678,20 +582,17 @@ document
 
     updateChannel();
 
-});
+};
 
 
-/* =========================================
+/* =========================
    DN
-   ========================================= */
+========================= */
 
-document
-.getElementById("down")
-.addEventListener("click",function(){
+document.getElementById("down")
+.onclick = function(){
 
-    if(!powered || locked){
-        return;
-    }
+    if(!powered || locked) return;
 
     channel--;
 
@@ -701,26 +602,22 @@ document
 
     updateChannel();
 
-});
+};
 
 
-/* =========================================
+/* =========================
    SCAN
-   ========================================= */
+========================= */
 
-document
-.getElementById("scan")
-.addEventListener("click",function(){
+document.getElementById("scan")
+.onclick = function(){
 
-    if(!powered || locked){
-        return;
-    }
+    if(!powered || locked) return;
+
 
     if(scanning){
 
         stopScan();
-
-        message("SCAN OFF");
 
         return;
     }
@@ -734,28 +631,24 @@ document
         .classList.add("scanning");
 
 
-    message("SCANNING...");
+    scanTimer = setInterval(function(){
+
+        channel++;
+
+        if(channel > 99){
+            channel = 0;
+        }
+
+        updateChannel();
+
+    },400);
+
+};
 
 
-    scanTimer =
-        setInterval(function(){
-
-            channel++;
-
-            if(channel > 99){
-                channel = 0;
-            }
-
-            updateChannel();
-
-        },400);
-
-});
-
-
-/* =========================================
+/* =========================
    إيقاف SCAN
-   ========================================= */
+========================= */
 
 function stopScan(){
 
@@ -772,13 +665,12 @@ function stopScan(){
 }
 
 
-/* =========================================
+/* =========================
    POWER
-   ========================================= */
+========================= */
 
-document
-.getElementById("power")
-.addEventListener("click",function(){
+document.getElementById("power")
+.onclick = function(){
 
     powered = !powered;
 
@@ -793,9 +685,7 @@ document
 
         message("Radio OFF");
 
-    }
-
-    else{
+    }else{
 
         updateChannel();
 
@@ -803,16 +693,15 @@ document
 
     }
 
-});
+};
 
 
-/* =========================================
+/* =========================
    LOCK
-   ========================================= */
+========================= */
 
-document
-.getElementById("lock")
-.addEventListener("click",function(){
+document.getElementById("lock")
+.onclick = function(){
 
     locked = !locked;
 
@@ -822,20 +711,17 @@ document
         : "UNLOCKED"
     );
 
-});
+};
 
 
-/* =========================================
+/* =========================
    +
-   ========================================= */
+========================= */
 
-document
-.getElementById("plus")
-.addEventListener("click",function(){
+document.getElementById("plus")
+.onclick = function(){
 
-    if(!powered || locked){
-        return;
-    }
+    if(!powered || locked) return;
 
     volume++;
 
@@ -845,20 +731,17 @@ document
 
     message("VOL " + volume);
 
-});
+};
 
 
-/* =========================================
+/* =========================
    -
-   ========================================= */
+========================= */
 
-document
-.getElementById("minus")
-.addEventListener("click",function(){
+document.getElementById("minus")
+.onclick = function(){
 
-    if(!powered || locked){
-        return;
-    }
+    if(!powered || locked) return;
 
     volume--;
 
@@ -868,114 +751,96 @@ document
 
     message("VOL " + volume);
 
-});
+};
 
 
-/* =========================================
+/* =========================
    V
-   ========================================= */
+========================= */
 
-document
-.getElementById("v")
-.addEventListener("click",function(){
+document.getElementById("v")
+.onclick = function(){
 
-    if(!powered){
-        return;
-    }
+    if(!powered) return;
 
-    message("Volume " + volume);
+    message("VOL " + volume);
 
-});
+};
 
 
-/* =========================================
+/* =========================
    M
-   ========================================= */
+========================= */
 
-document
-.getElementById("memory")
-.addEventListener("click",function(){
+document.getElementById("memory")
+.onclick = function(){
 
-    if(!powered){
-        return;
-    }
+    if(!powered) return;
 
-    message("Memory");
+    message("MEMORY");
 
-});
+};
 
 
-/* =========================================
+/* =========================
    P
-   ========================================= */
+========================= */
 
-document
-.getElementById("p")
-.addEventListener("click",function(){
+document.getElementById("p")
+.onclick = function(){
 
-    if(!powered){
-        return;
-    }
+    if(!powered) return;
 
     message("P");
 
-});
+};
 
 
-/* =========================================
+/* =========================
    RP
-   ========================================= */
+========================= */
 
-document
-.getElementById("rp")
-.addEventListener("click",function(){
+document.getElementById("rp")
+.onclick = function(){
 
-    if(!powered){
-        return;
-    }
+    if(!powered) return;
 
     message("RP");
 
-});
+};
 
 
-/* =========================================
+/* =========================
    LOCAL
-   ========================================= */
+========================= */
 
-document
-.getElementById("local")
-.addEventListener("click",function(){
+document.getElementById("local")
+.onclick = function(){
 
-    if(!powered){
-        return;
-    }
+    if(!powered) return;
 
     message("LOCAL");
 
-});
+};
 
 
-/* =========================================
-   EYE
-   ========================================= */
+/* =========================
+   EYE / MONITOR
+========================= */
 
-document
-.getElementById("eye")
-.addEventListener("click",function(){
+document.getElementById("eye")
+.onclick = function(){
 
-    if(!powered){
-        return;
-    }
+    if(!powered) return;
 
-    message("Monitor");
+    message("MONITOR");
 
-});
+};
 
 
-/* =========================================
+/* =========================
    PTT
-   ========================================= */
+========================= */
 
 const ptt =
     document.getElementById("ptt");
@@ -983,20 +848,16 @@ const ptt =
 
 function startPTT(){
 
-    if(!powered || locked){
-        return;
-    }
+    if(!powered || locked) return;
 
-    message("🎙️ PTT");
+    message("🎙️ PTT ON");
 
 }
 
 
 function stopPTT(){
 
-    if(!powered){
-        return;
-    }
+    if(!powered) return;
 
     message("PTT OFF");
 
@@ -1018,24 +879,15 @@ ptt.addEventListener(
     stopPTT
 );
 
-
-/* =========================================
-   منع سحب الصورة باللمس
-   ========================================= */
-
-document
-.getElementById("radio")
-.addEventListener(
-    "dragstart",
-    function(e){
-        e.preventDefault();
-    }
+ptt.addEventListener(
+    "pointerleave",
+    stopPTT
 );
 
 
-/* =========================================
+/* =========================
    البداية
-   ========================================= */
+========================= */
 
 updateChannel();
 
@@ -1047,7 +899,6 @@ setTimeout(function(){
         .textContent = "Connected";
 
 },1500);
-
 
 </script>
 
