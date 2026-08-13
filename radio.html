@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
-
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 
@@ -10,7 +9,7 @@
                maximum-scale=1.0,
                user-scalable=no">
 
-<title>MECID RADIO</title>
+<title>Radio</title>
 
 <style>
 
@@ -21,865 +20,266 @@
 
 html,body{
     margin:0;
+    padding:0;
     width:100%;
     min-height:100%;
     background:#000;
 }
 
 body{
-    min-height:100vh;
     display:flex;
     justify-content:center;
     align-items:flex-start;
-    overflow:hidden;
-    font-family:Arial,sans-serif;
+    overflow-x:hidden;
 }
 
-
-/* =====================================================
-   الجهاز
-===================================================== */
+/* =========================================
+   الراديو - نفس الصورة
+   ========================================= */
 
 .radio{
-
     position:relative;
 
-    width:min(88vw,390px);
+    width:min(100vw, 1024px);
 
-    height:calc(min(88vw,390px) * 2.12);
+    aspect-ratio:1024 / 1536;
 
-    max-height:92vh;
+    background-image:url("1000042286.jpg");
+    background-size:100% 100%;
+    background-repeat:no-repeat;
 
-    margin-top:18px;
-
-    border-radius:55px 55px 38px 38px;
-
-    background:
-        linear-gradient(
-            100deg,
-            #101010 0%,
-            #333 13%,
-            #202020 32%,
-            #111 70%,
-            #303030 90%,
-            #0b0b0b 100%
-        );
-
-    border:3px solid #444;
-
-    box-shadow:
-        0 20px 45px #000,
-        inset 5px 0 10px rgba(255,255,255,.08),
-        inset -7px 0 15px rgba(0,0,0,.8);
-
-    direction:ltr;
+    user-select:none;
 }
 
 
-/* =====================================================
-   الهوائي
-===================================================== */
+/* =========================================
+   الأزرار الشفافة فوق الصورة
+   ========================================= */
 
-.antenna{
-
+.button{
     position:absolute;
 
-    right:38px;
-    top:-78px;
+    border:0;
+    padding:0;
 
-    width:48px;
-    height:145px;
+    background:transparent;
 
-    border-radius:25px 25px 10px 10px;
+    cursor:pointer;
 
-    background:
-        linear-gradient(
-            90deg,
-            #151515,
-            #555,
-            #202020,
-            #111
-        );
+    z-index:20;
 
-    transform:rotate(4deg);
+    -webkit-tap-highlight-color:transparent;
 
-    box-shadow:
-        inset 5px 0 8px rgba(255,255,255,.12),
-        8px 10px 15px #000;
+    touch-action:manipulation;
+}
+
+.button:active{
+    transform:scale(.95);
 }
 
 
-/* =====================================================
-   المقبض العلوي
-===================================================== */
-
-.knob{
-
-    position:absolute;
-
-    left:52px;
-    top:-30px;
-
-    width:62px;
-    height:48px;
-
-    border-radius:14px 14px 8px 8px;
-
-    background:
-        repeating-linear-gradient(
-            90deg,
-            #111 0px,
-            #111 6px,
-            #444 7px,
-            #151515 11px
-        );
-
-    border:3px solid #222;
-
-    box-shadow:
-        0 7px 10px #000;
-}
-
-
-/* =====================================================
-   Connecting
-===================================================== */
-
-.connection{
-
-    position:absolute;
-
-    left:-1px;
-    top:-92px;
-
-    color:#ffd900;
-
-    font-size:24px;
-    font-weight:bold;
-
-    white-space:nowrap;
-}
-
-
-/* =====================================================
-   Online
-===================================================== */
-
-.online{
-
-    position:absolute;
-
-    left:40px;
-    top:-20px;
-
-    color:#ffd900;
-
-    font-size:20px;
-    font-weight:bold;
-
-    white-space:nowrap;
-
-    display:none;
-}
-
-
-/* =====================================================
-   LOCAL
-===================================================== */
-
-.local{
-
-    position:absolute;
-
-    left:50%;
-    top:12px;
-
-    transform:translateX(-50%);
-
-    width:155px;
-    height:42px;
-
-    border-radius:25px;
-
-    border:5px solid #555;
-
-    background:
-        linear-gradient(
-            #75e46b,
-            #16a80d
-        );
-
-    color:#fff;
-
-    font-size:21px;
-    font-weight:bold;
-
-    text-shadow:0 2px 2px #155d11;
-
-    box-shadow:
-        inset 0 3px 5px rgba(255,255,255,.45),
-        0 4px 8px #000;
-
-    z-index:10;
-}
-
-
-/* =====================================================
-   جسم الشاشة العلوي
-===================================================== */
-
-.display-body{
-
-    position:absolute;
-
-    top:65px;
-    left:50%;
-
-    transform:translateX(-50%);
-
-    width:82%;
-    height:355px;
-
-    border-radius:105px 105px 40px 40px;
-
-    background:
-        radial-gradient(
-            ellipse at center,
-            #444 0%,
-            #292929 48%,
-            #111 75%
-        );
-
-    border:4px solid #080808;
-
-    box-shadow:
-        inset 0 0 0 3px #555,
-        inset 0 -15px 25px #050505;
-}
-
-
-/* =====================================================
-   زر Power
-===================================================== */
+/* =========================================
+   POWER
+   ========================================= */
 
 .power{
-
-    position:absolute;
-
-    left:-25px;
-    top:20px;
-
-    width:68px;
-    height:68px;
-
-    border-radius:50%;
-
-    border:5px solid #111;
-
-    background:
-        radial-gradient(
-            circle,
-            #63bfff,
-            #167be4 55%,
-            #102b55
-        );
-
-    color:#0b4e9c;
-
-    font-size:38px;
-    font-weight:bold;
-
-    box-shadow:
-        0 0 8px #38aaff,
-        inset 0 3px 5px rgba(255,255,255,.6),
-        0 5px 8px #000;
-
-    z-index:30;
+    left:12%;
+    top:20%;
+    width:18%;
+    height:9%;
 }
 
 
-/* =====================================================
+/* =========================================
+   LOCAL
+   ========================================= */
+
+.local{
+    left:40%;
+    top:16.5%;
+    width:24%;
+    height:6%;
+}
+
+
+/* =========================================
    RP
-===================================================== */
+   ========================================= */
 
 .rp{
-
-    position:absolute;
-
-    right:-20px;
-    top:27px;
-
-    width:54px;
-    height:54px;
-
-    border-radius:50%;
-
-    border:3px solid #111;
-
-    background:
-        radial-gradient(
-            circle,
-            #ff9b9b,
-            #bb3636 65%,
-            #551111
-        );
-
-    color:#fff;
-
-    font-weight:bold;
-    font-size:17px;
-
-    box-shadow:0 4px 7px #000;
-
-    z-index:30;
+    left:75%;
+    top:21%;
+    width:14%;
+    height:7%;
 }
 
 
-/* =====================================================
-   أيقونة القائمة
-===================================================== */
-
-.menu-icon{
-
-    position:absolute;
-
-    top:83px;
-    left:50%;
-
-    transform:translateX(-50%);
-
-    color:#fff;
-
-    font-size:38px;
-
-    z-index:5;
-}
-
-
-/* =====================================================
-   إطار الشاشة
-===================================================== */
-
-.screen-frame{
-
-    position:absolute;
-
-    left:50%;
-    top:126px;
-
-    transform:translateX(-50%);
-
-    width:74%;
-    height:145px;
-
-    padding:9px;
-
-    border-radius:23px;
-
-    background:#242424;
-
-    border:4px solid #111;
-
-    box-shadow:
-        inset 0 0 0 2px #555,
-        0 7px 12px #000;
-}
-
-
-/* =====================================================
-   الشاشة
-===================================================== */
-
-.screen{
-
-    width:100%;
-    height:100%;
-
-    border-radius:13px;
-
-    background:
-        linear-gradient(
-            145deg,
-            #ffc43c,
-            #ff9900
-        );
-
-    border:3px solid #734500;
-
-    position:relative;
-
-    display:flex;
-
-    justify-content:center;
-    align-items:center;
-
-    overflow:hidden;
-
-    box-shadow:
-        inset 0 0 18px rgba(255,255,255,.35);
-}
-
-
-/* لمعان الشاشة */
-
-.screen::after{
-
-    content:"";
-
-    position:absolute;
-
-    width:150%;
-    height:35px;
-
-    top:35px;
-    left:-25%;
-
-    background:rgba(255,255,255,.12);
-
-    transform:rotate(-12deg);
-
-}
-
-
-/* الرقم */
+/* =========================================
+   شاشة الرقم
+   ========================================= */
 
 .channel{
+    position:absolute;
 
-    position:relative;
+    left:32%;
+    top:34%;
 
-    z-index:5;
+    width:36%;
+    height:11%;
 
-    color:#050505;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 
     font-family:
         "Courier New",
         monospace;
 
-    font-size:58px;
+    font-size:clamp(
+        45px,
+        11vw,
+        100px
+    );
 
     font-weight:900;
 
-    letter-spacing:2px;
+    color:#000;
 
-    line-height:1;
-}
-
-
-/* رقم صغير فوق الشاشة */
-
-.small-number{
-
-    position:absolute;
-
-    top:8px;
-
-    left:50%;
-
-    transform:translateX(-50%);
-
-    font-family:monospace;
-
-    font-size:12px;
-
-    font-weight:bold;
+    pointer-events:none;
 
     z-index:10;
+
+    letter-spacing:-4px;
 }
 
 
-/* =====================================================
-   أزرار + M -
-===================================================== */
+/* =========================================
+   + 
+   ========================================= */
 
-.middle-controls{
-
-    position:absolute;
-
-    left:50%;
-
-    top:278px;
-
-    transform:translateX(-50%);
-
-    width:82%;
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    direction:ltr;
-
-    z-index:20;
+.plus{
+    left:27%;
+    top:47%;
+    width:18%;
+    height:6%;
 }
 
 
-.middle-button{
-
-    height:47px;
-
-    border-radius:18px;
-
-    border:3px solid #222;
-
-    background:
-        linear-gradient(
-            #eee,
-            #aaa
-        );
-
-    color:#111;
-
-    font-size:22px;
-
-    font-weight:bold;
-
-    box-shadow:
-        0 5px 0 #111,
-        0 7px 10px #000;
-}
-
-
-.plus,
-.minus{
-
-    width:85px;
-}
-
+/* =========================================
+   M
+   ========================================= */
 
 .memory{
-
-    width:68px;
+    left:39%;
+    top:47%;
+    width:20%;
+    height:6%;
 }
 
 
-.middle-button:active{
+/* =========================================
+   -
+   ========================================= */
 
-    transform:translateY(4px);
-
-    box-shadow:
-        0 1px 0 #111;
+.minus{
+    left:55%;
+    top:47%;
+    width:18%;
+    height:6%;
 }
 
 
-/* =====================================================
-   أزرار UP SCAN DN
-===================================================== */
+/* =========================================
+   UP
+   ========================================= */
 
-.main-controls{
-
-    position:absolute;
-
-    top:365px;
-
-    left:50%;
-
-    transform:translateX(-50%);
-
-    width:82%;
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    direction:ltr;
-
-    z-index:20;
+.up{
+    left:24%;
+    top:53%;
+    width:17%;
+    height:9%;
 }
 
 
-.main-button{
-
-    height:82px;
-
-    border-radius:27px;
-
-    border:4px solid #222;
-
-    background:
-        linear-gradient(
-            145deg,
-            #fff,
-            #c8c8c8
-        );
-
-    color:#111;
-
-    font-size:20px;
-
-    font-weight:bold;
-
-    box-shadow:
-        0 6px 0 #333,
-        0 8px 12px #000;
-}
-
-
-.up,
-.down{
-
-    width:75px;
-
-    transform:rotate(-14deg);
-}
-
-
-.down{
-
-    transform:rotate(14deg);
-}
-
+/* =========================================
+   SCAN
+   ========================================= */
 
 .scan{
-
-    width:105px;
-
-    height:66px;
-
-    border-radius:25px;
-
-    transform:none;
+    left:38%;
+    top:53%;
+    width:25%;
+    height:8%;
 }
 
 
-.main-button:active{
+/* =========================================
+   DN
+   ========================================= */
 
-    transform:translateY(5px);
+.down{
+    left:58%;
+    top:53%;
+    width:18%;
+    height:9%;
 }
 
 
-/* =====================================================
-   السماعة
-===================================================== */
-
-.speaker{
-
-    position:absolute;
-
-    left:50%;
-
-    top:470px;
-
-    transform:translateX(-50%);
-
-    width:80%;
-
-    height:360px;
-
-    border-radius:65px 65px 90px 90px;
-
-    background:
-        linear-gradient(
-            145deg,
-            #333,
-            #111
-        );
-
-    border:4px solid #555;
-
-    box-shadow:
-        inset 0 5px 12px rgba(255,255,255,.06),
-        inset 0 -15px 25px #000,
-        0 8px 15px #000;
-
-    padding:40px 35px;
-
-    display:grid;
-
-    grid-template-columns:repeat(4,1fr);
-
-    grid-auto-rows:15px;
-
-    gap:17px;
-
-    align-content:start;
-}
-
-
-/* ثقوب السماعة */
-
-.hole{
-
-    height:9px;
-
-    border-radius:10px;
-
-    background:#030303;
-
-    box-shadow:
-        inset 0 2px 2px #555,
-        0 1px 2px #000;
-}
-
-
-/* =====================================================
+/* =========================================
    PTT
-===================================================== */
+   ========================================= */
 
 .ptt{
-
-    position:absolute;
-
-    left:50%;
-    top:625px;
-
-    transform:translateX(-50%);
-
-    border:0;
-
-    background:transparent;
-
-    color:#fff;
-
-    font-size:30px;
-
-    font-weight:bold;
-
-    text-shadow:
-        0 2px 4px #000;
-
-    z-index:30;
+    left:25%;
+    top:68%;
+    width:50%;
+    height:25%;
 }
 
 
-/* =====================================================
-   الأزرار الجانبية
-===================================================== */
-
-.side-controls{
-
-    position:absolute;
-
-    right:-28px;
-
-    top:175px;
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:10px;
-
-    z-index:30;
-}
-
-
-.side-button{
-
-    width:53px;
-    height:53px;
-
-    border-radius:50%;
-
-    border:3px solid #222;
-
-    background:
-        linear-gradient(
-            #eee,
-            #999
-        );
-
-    color:#111;
-
-    font-size:22px;
-    font-weight:bold;
-
-    box-shadow:
-        0 4px 7px #000,
-        inset 0 2px 3px #fff;
-}
-
-
-.side-button:active{
-
-    transform:scale(.93);
-
-}
-
-
-/* =====================================================
-   زر القفل
-===================================================== */
-
-.lock{
-
-    font-size:20px;
-
-}
-
-
-/* =====================================================
-   الحالة
-===================================================== */
+/* =========================================
+   رسالة الحالة
+   ========================================= */
 
 .status{
-
     position:fixed;
 
-    bottom:20px;
     left:50%;
+    bottom:20px;
 
     transform:translateX(-50%);
-
-    background:rgba(0,0,0,.9);
-
-    color:#fff;
 
     padding:10px 20px;
 
-    border-radius:25px;
+    border-radius:20px;
 
-    font-size:15px;
+    background:rgba(0,0,0,.85);
+
+    color:#fff;
+
+    font-family:Arial,sans-serif;
+
+    font-size:16px;
 
     display:none;
 
     z-index:100;
 }
 
-
 .status.show{
-
     display:block;
 }
 
 
-/* =====================================================
-   SCAN
-===================================================== */
+/* =========================================
+   حالة M
+   ========================================= */
 
-.scanning .screen{
-
-    animation:flash .25s infinite alternate;
+.radio.moving .channel{
+    animation:channelFlash .25s infinite alternate;
 }
 
-
-@keyframes flash{
-
-    from{
-        filter:brightness(.8);
-    }
-
-    to{
-        filter:brightness(1.3);
-    }
-
-}
-
-
-/* =====================================================
-   M
-===================================================== */
-
-.auto .channel{
-
-    animation:numberFlash .12s infinite alternate;
-}
-
-
-@keyframes numberFlash{
+@keyframes channelFlash{
 
     from{
         opacity:.55;
@@ -891,22 +291,7 @@ body{
 
 }
 
-
-/* =====================================================
-   الهاتف الصغير
-===================================================== */
-
-@media(max-height:700px){
-
-    .radio{
-        transform:scale(.78);
-        transform-origin:top center;
-    }
-
-}
-
 </style>
-
 </head>
 
 
@@ -916,206 +301,124 @@ body{
 <div class="radio" id="radio">
 
 
-    <div class="antenna"></div>
+    <!-- =====================================
+         رقم القناة
+         ===================================== -->
 
-    <div class="knob"></div>
-
-
-    <div class="connection" id="connection">
-        Connecting...
+    <div class="channel" id="channel">
+        001
     </div>
 
 
-    <div class="local" id="local">
-        LOCAL
-    </div>
+    <!-- =====================================
+         LOCAL
+         ===================================== -->
+
+    <button
+        class="button local"
+        id="local"
+        aria-label="LOCAL">
+    </button>
 
 
-    <div class="display-body">
+    <!-- =====================================
+         POWER
+         ===================================== -->
+
+    <button
+        class="button power"
+        id="power"
+        aria-label="POWER">
+    </button>
 
 
-        <button
-            class="power"
-            id="power">
-            ⏻
-        </button>
+    <!-- =====================================
+         RP
+         ===================================== -->
+
+    <button
+        class="button rp"
+        id="rp"
+        aria-label="RP">
+    </button>
 
 
-        <button
-            class="rp"
-            id="rp">
-            RP
-        </button>
+    <!-- =====================================
+         +
+         ===================================== -->
+
+    <button
+        class="button plus"
+        id="plus"
+        aria-label="PLUS">
+    </button>
 
 
-        <div class="menu-icon">
-            ▤
-        </div>
+    <!-- =====================================
+         M
+         ===================================== -->
+
+    <button
+        class="button memory"
+        id="memory"
+        aria-label="M">
+    </button>
 
 
-        <!-- الشاشة -->
+    <!-- =====================================
+         -
+         ===================================== -->
 
-        <div class="screen-frame">
-
-            <div class="screen">
-
-                <div
-                    class="small-number"
-                    id="smallNumber">
-                    001
-                </div>
-
-                <div
-                    class="channel"
-                    id="channel">
-                    001
-                </div>
-
-            </div>
-
-        </div>
+    <button
+        class="button minus"
+        id="minus"
+        aria-label="MINUS">
+    </button>
 
 
-        <!-- + M - -->
+    <!-- =====================================
+         UP
+         ===================================== -->
 
-        <div class="middle-controls">
-
-            <button
-                class="middle-button plus"
-                id="plus">
-                +
-            </button>
-
-            <button
-                class="middle-button memory"
-                id="memory">
-                M
-            </button>
-
-            <button
-                class="middle-button minus"
-                id="minus">
-                -
-            </button>
-
-        </div>
+    <button
+        class="button up"
+        id="up"
+        aria-label="UP">
+    </button>
 
 
-        <!-- UP SCAN DN -->
+    <!-- =====================================
+         SCAN
+         ===================================== -->
 
-        <div class="main-controls">
-
-            <button
-                class="main-button up"
-                id="up">
-                UP
-            </button>
-
-            <button
-                class="main-button scan"
-                id="scan">
-                SCAN
-            </button>
-
-            <button
-                class="main-button down"
-                id="down">
-                DN
-            </button>
-
-        </div>
+    <button
+        class="button scan"
+        id="scan"
+        aria-label="SCAN">
+    </button>
 
 
-        <!-- السماعة -->
+    <!-- =====================================
+         DN
+         ===================================== -->
 
-        <div class="speaker">
-
-            <span class="hole"></span>
-            <span class="hole"></span>
-            <span class="hole"></span>
-            <span class="hole"></span>
-
-            <span class="hole"></span>
-            <span class="hole"></span>
-            <span class="hole"></span>
-            <span class="hole"></span>
-
-            <span class="hole"></span>
-            <span class="hole"></span>
-            <span class="hole"></span>
-            <span class="hole"></span>
-
-            <span class="hole"></span>
-            <span class="hole"></span>
-            <span class="hole"></span>
-            <span class="hole"></span>
-
-            <span class="hole"></span>
-            <span class="hole"></span>
-            <span class="hole"></span>
-            <span class="hole"></span>
-
-            <span class="hole"></span>
-            <span class="hole"></span>
-            <span class="hole"></span>
-            <span class="hole"></span>
-
-            <span class="hole"></span>
-            <span class="hole"></span>
-            <span class="hole"></span>
-            <span class="hole"></span>
-
-            <span class="hole"></span>
-            <span class="hole"></span>
-            <span class="hole"></span>
-            <span class="hole"></span>
-
-            <span class="hole"></span>
-            <span class="hole"></span>
-            <span class="hole"></span>
-            <span class="hole"></span>
-
-        </div>
+    <button
+        class="button down"
+        id="down"
+        aria-label="DN">
+    </button>
 
 
-        <button
-            class="ptt"
-            id="ptt">
-            PTT
-        </button>
+    <!-- =====================================
+         PTT
+         ===================================== -->
 
+    <button
+        class="button ptt"
+        id="ptt"
+        aria-label="PTT">
+    </button>
 
-        <!-- الأزرار الجانبية -->
-
-        <div class="side-controls">
-
-            <button
-                class="side-button lock"
-                id="lock">
-                🔒
-            </button>
-
-            <button
-                class="side-button"
-                id="p">
-                P
-            </button>
-
-            <button
-                class="side-button"
-                id="v">
-                V
-            </button>
-
-            <button
-                class="side-button"
-                id="eye">
-                ◉
-            </button>
-
-        </div>
-
-    </div>
 
 </div>
 
@@ -1126,323 +429,312 @@ body{
 </div>
 
 
+
 <script>
 
 /* =========================================
    المتغيرات
-========================================= */
+   ========================================= */
 
 let channel = 1;
 
-let volume = 5;
-
 let powered = true;
 
-let locked = false;
+let moving = false;
 
-let autoM = false;
+let moveTimer = null;
 
 let scanning = false;
-
-let mTimer = null;
 
 let scanTimer = null;
 
 
 /* =========================================
-   العناصر
-========================================= */
-
-const radio =
-    document.getElementById("radio");
-
-const channelEl =
-    document.getElementById("channel");
-
-const smallNumber =
-    document.getElementById("smallNumber");
-
-const status =
-    document.getElementById("status");
-
-
-/* =========================================
-   تحديث الرقم
-========================================= */
+   عرض الرقم
+   001 → 002 → ... → 999
+   ========================================= */
 
 function updateChannel(){
 
-    const number =
+    document.getElementById("channel")
+        .textContent =
         String(channel).padStart(3,"0");
-
-    channelEl.textContent = number;
-
-    smallNumber.textContent = number;
 
 }
 
 
 /* =========================================
    رسالة
-========================================= */
+   ========================================= */
 
 function message(text){
+
+    const status =
+        document.getElementById("status");
 
     status.textContent = text;
 
     status.classList.add("show");
 
-    clearTimeout(status.timer);
+    clearTimeout(status.hideTimer);
 
-    status.timer = setTimeout(() => {
+    status.hideTimer =
+        setTimeout(function(){
 
-        status.classList.remove("show");
+            status.classList.remove("show");
 
-    },1000);
+        },1200);
 
 }
 
 
 /* =========================================
-   إيقاف M
-========================================= */
+   زيادة رقم
+   ========================================= */
 
-function stopM(){
+function increaseChannel(){
 
-    autoM = false;
+    if(!powered) return;
 
-    clearInterval(mTimer);
+    channel++;
 
-    mTimer = null;
+    if(channel > 999){
 
-    radio.classList.remove("auto");
+        channel = 1;
+
+    }
+
+    updateChannel();
 
 }
+
+
+/* =========================================
+   نقصان رقم
+   ========================================= */
+
+function decreaseChannel(){
+
+    if(!powered) return;
+
+    channel--;
+
+    if(channel < 1){
+
+        channel = 999;
+
+    }
+
+    updateChannel();
+
+}
+
+
+/* =========================================
+   زر +
+   ========================================= */
+
+document.getElementById("plus")
+.onclick = function(){
+
+    increaseChannel();
+
+};
+
+
+/* =========================================
+   زر -
+   ========================================= */
+
+document.getElementById("minus")
+.onclick = function(){
+
+    decreaseChannel();
+
+};
 
 
 /* =========================================
    زر M
-   001 → 002 → ... → 999
-========================================= */
+   =========================================
 
-document
-.getElementById("memory")
-.addEventListener("click",function(){
+   عند الضغط على M يبدأ تغيير الأرقام
+   بشكل متواصل من 001 إلى 999.
 
-    if(!powered || locked){
-        return;
-    }
+   عند الضغط مرة ثانية يتوقف.
+   ========================================= */
 
-    if(autoM){
+document.getElementById("memory")
+.onclick = function(){
 
-        stopM();
+    if(!powered) return;
+
+
+    if(moving){
+
+        stopMoving();
 
         message("M STOP");
 
         return;
+
     }
 
 
-    autoM = true;
-
-    radio.classList.add("auto");
-
-    message("M AUTO");
+    moving = true;
 
 
-    mTimer = setInterval(function(){
+    document
+        .getElementById("radio")
+        .classList.add("moving");
 
-        channel++;
 
-        if(channel > 999){
-            channel = 1;
-        }
+    moveTimer =
+        setInterval(function(){
 
-        updateChannel();
+            channel++;
 
-    },180);
+            if(channel > 999){
 
-});
+                channel = 1;
+
+            }
+
+            updateChannel();
+
+        },180);
+
+};
 
 
 /* =========================================
-   +
-========================================= */
+   إيقاف M
+   ========================================= */
 
-document
-.getElementById("plus")
-.addEventListener("click",function(){
+function stopMoving(){
 
-    if(!powered || locked){
-        return;
-    }
+    moving = false;
 
-    stopM();
+    clearInterval(moveTimer);
 
-    channel++;
-
-    if(channel > 999){
-        channel = 1;
-    }
-
-    updateChannel();
-
-});
+    moveTimer = null;
 
 
-/* =========================================
-   -
-========================================= */
+    document
+        .getElementById("radio")
+        .classList.remove("moving");
 
-document
-.getElementById("minus")
-.addEventListener("click",function(){
-
-    if(!powered || locked){
-        return;
-    }
-
-    stopM();
-
-    channel--;
-
-    if(channel < 1){
-        channel = 999;
-    }
-
-    updateChannel();
-
-});
+}
 
 
 /* =========================================
    UP
-========================================= */
+   ========================================= */
 
-document
-.getElementById("up")
-.addEventListener("click",function(){
+document.getElementById("up")
+.onclick = function(){
 
-    if(!powered || locked){
-        return;
-    }
+    increaseChannel();
 
-    stopM();
-
-    channel++;
-
-    if(channel > 999){
-        channel = 1;
-    }
-
-    updateChannel();
-
-});
+};
 
 
 /* =========================================
    DN
-========================================= */
+   ========================================= */
 
-document
-.getElementById("down")
-.addEventListener("click",function(){
+document.getElementById("down")
+.onclick = function(){
 
-    if(!powered || locked){
-        return;
-    }
+    decreaseChannel();
 
-    stopM();
-
-    channel--;
-
-    if(channel < 1){
-        channel = 999;
-    }
-
-    updateChannel();
-
-});
+};
 
 
 /* =========================================
    SCAN
-========================================= */
+   ========================================= */
 
-document
-.getElementById("scan")
-.addEventListener("click",function(){
+document.getElementById("scan")
+.onclick = function(){
 
-    if(!powered || locked){
-        return;
-    }
+    if(!powered) return;
 
-    stopM();
 
     if(scanning){
 
-        clearInterval(scanTimer);
+        stopScan();
 
-        scanning = false;
-
-        radio.classList.remove("scanning");
-
-        message("SCAN STOP");
+        message("SCAN OFF");
 
         return;
+
     }
 
 
     scanning = true;
 
-    radio.classList.add("scanning");
 
-    message("SCANNING");
+    scanTimer =
+        setInterval(function(){
+
+            channel++;
+
+            if(channel > 999){
+
+                channel = 1;
+
+            }
+
+            updateChannel();
+
+        },250);
 
 
-    scanTimer = setInterval(function(){
+    message("SCAN");
 
-        channel++;
+};
 
-        if(channel > 999){
-            channel = 1;
-        }
 
-        updateChannel();
+/* =========================================
+   إيقاف SCAN
+   ========================================= */
 
-    },300);
+function stopScan(){
 
-});
+    scanning = false;
+
+    clearInterval(scanTimer);
+
+    scanTimer = null;
+
+}
 
 
 /* =========================================
    POWER
-========================================= */
+   ========================================= */
 
-document
-.getElementById("power")
-.addEventListener("click",function(){
+document.getElementById("power")
+.onclick = function(){
 
     powered = !powered;
 
 
     if(!powered){
 
-        stopM();
+        stopMoving();
 
-        clearInterval(scanTimer);
+        stopScan();
 
-        scanning = false;
-
-        radio.classList.remove("scanning");
-
-        channelEl.textContent = "---";
-
-        smallNumber.textContent = "---";
+        document.getElementById("channel")
+            .textContent = "---";
 
         message("RADIO OFF");
 
-    }else{
+    }
+
+    else{
 
         updateChannel();
 
@@ -1450,116 +742,40 @@ document
 
     }
 
-});
-
-
-/* =========================================
-   LOCK
-========================================= */
-
-document
-.getElementById("lock")
-.addEventListener("click",function(){
-
-    locked = !locked;
-
-    message(
-        locked
-        ? "LOCKED"
-        : "UNLOCKED"
-    );
-
-});
+};
 
 
 /* =========================================
    LOCAL
-========================================= */
+   ========================================= */
 
-document
-.getElementById("local")
-.addEventListener("click",function(){
+document.getElementById("local")
+.onclick = function(){
 
-    if(!powered){
-        return;
-    }
+    if(!powered) return;
 
     message("LOCAL");
 
-});
+};
 
 
 /* =========================================
    RP
-========================================= */
+   ========================================= */
 
-document
-.getElementById("rp")
-.addEventListener("click",function(){
+document.getElementById("rp")
+.onclick = function(){
 
-    if(!powered){
-        return;
-    }
+    if(!powered) return;
 
     message("RP");
 
-});
-
-
-/* =========================================
-   P
-========================================= */
-
-document
-.getElementById("p")
-.addEventListener("click",function(){
-
-    if(!powered){
-        return;
-    }
-
-    message("P");
-
-});
-
-
-/* =========================================
-   V
-========================================= */
-
-document
-.getElementById("v")
-.addEventListener("click",function(){
-
-    if(!powered){
-        return;
-    }
-
-    message("VOL " + volume);
-
-});
-
-
-/* =========================================
-   EYE
-========================================= */
-
-document
-.getElementById("eye")
-.addEventListener("click",function(){
-
-    if(!powered){
-        return;
-    }
-
-    message("MONITOR");
-
-});
+};
 
 
 /* =========================================
    PTT
-========================================= */
+   ========================================= */
 
 const ptt =
     document.getElementById("ptt");
@@ -1569,11 +785,9 @@ ptt.addEventListener(
     "pointerdown",
     function(){
 
-        if(!powered || locked){
-            return;
-        }
+        if(!powered) return;
 
-        message("🎙️ PTT ON");
+        message("PTT ON");
 
     }
 );
@@ -1583,9 +797,7 @@ ptt.addEventListener(
     "pointerup",
     function(){
 
-        if(!powered){
-            return;
-        }
+        if(!powered) return;
 
         message("PTT OFF");
 
@@ -1597,6 +809,8 @@ ptt.addEventListener(
     "pointercancel",
     function(){
 
+        if(!powered) return;
+
         message("PTT OFF");
 
     }
@@ -1604,19 +818,10 @@ ptt.addEventListener(
 
 
 /* =========================================
-   بدء التشغيل
-========================================= */
+   البداية
+   ========================================= */
 
 updateChannel();
-
-
-setTimeout(function(){
-
-    document
-    .getElementById("connection")
-    .textContent = "Connected";
-
-},1500);
 
 </script>
 
