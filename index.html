@@ -9,28 +9,20 @@
 
 <body>
 
-<div class="container">
+<div class="home">
 
-<h1>📷 Camera Connect</h1>
+    <h1>📷 Camera Connect</h1>
+    <p>اتصال سريع بين الأجهزة</p>
 
-<div class="buttons">
-    <button onclick="createRoom()">⬆️ إنشاء اقتران</button>
-    <button onclick="scanRoom()">⬇️ مسح كود QR</button>
-</div>
+    <button onclick="location.href='create.html'">
+        🔗 إنشاء كود
+    </button>
 
-<div id="qrBox" class="box">
-    <p>سيظهر كود QR هنا</p>
-</div>
-
-<div id="cameraBox" class="box">
-    <video id="camera" autoplay playsinline></video>
-</div>
-
-<p id="status">الحالة: غير متصل</p>
+    <button onclick="location.href='scan.html'">
+        📷 مسح كود
+    </button>
 
 </div>
-
-<script src="app.js"></script>
 
 </body>
 </html>
