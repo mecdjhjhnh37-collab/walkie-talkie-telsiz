@@ -12,13 +12,19 @@
 
 <div class="scan-page">
 
-    <h1>📷 مسح الكود</h1>
+<h1>📷 مسح الكود</h1>
 
-    <div class="camera-box">
-        <video id="camera" autoplay playsinline></video>
-    </div>
+<div class="scan-box">
+    <video id="camera" autoplay playsinline></video>
+</div>
 
-    <p id="status">جاري تشغيل الكاميرا...</p>
+<div class="code-input">
+    <input type="text" id="code" placeholder="أدخل الكود هنا">
+</div>
+
+<button onclick="connectCode()">اتصال</button>
+
+<p id="status">جاهز للمسح</p>
 
 </div>
 
