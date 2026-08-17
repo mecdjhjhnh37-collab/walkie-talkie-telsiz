@@ -56,3 +56,52 @@ button:hover {
 button:last-child {
     background: linear-gradient(45deg,#00c853,#00e676);
 }
+.scan-page {
+    width:90%;
+    max-width:400px;
+    text-align:center;
+}
+
+.scan-page h1 {
+    color:white;
+    margin-bottom:25px;
+}
+
+
+.scan-box {
+    width:280px;
+    height:280px;
+    margin:auto;
+    border-radius:25px;
+    overflow:hidden;
+    border:4px solid #00d9ff;
+    box-shadow:0 0 30px #00d9ff;
+}
+
+
+#camera {
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+
+.code-input {
+    margin-top:25px;
+}
+
+
+.code-input input {
+    width:100%;
+    height:60px;
+    border-radius:20px;
+    border:none;
+    padding:15px;
+    font-size:18px;
+    text-align:center;
+}
+
+
+.scan-page button {
+    margin-top:20px;
+}
