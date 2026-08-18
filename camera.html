@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الكاميرا - Camera Connect</title>
+
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #050807;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    .app {
+      max-width: 650px;
+      margin: auto;
+      padding: 25px 18px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 20px;
+      font-size: 32px;
+    }
+
+    .subtitle {
+      color: #8e9995;
+      margin-bottom: 25px;
+    }
+
+    video {
+      width: 100%;
+      max-height: 55vh;
+      object-fit: cover;
+      border-radius: 25px;
+      background: #111;
+      border: 2px solid #00e676;
+    }
+
+    .card {
+      margin-top: 22px;
+      padding: 25px;
+      border-radius: 25px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
+    }
+
+    #qrcode {
+      width: 220px;
+      height: 220px;
+      margin: 20px auto;
+      padding: 10px;
+      background: white;
+      border-radius: 15px;
+    }
+
+    #qrcode img {
+      width: 200px;
+      height: 200px;
+    }
+
+    .code {
+      direction: ltr;
+      word-break: break-all;
+      color: #00e676;
+      font-size: 13px;
+    }
+
+    .status {
+      margin-top: 20px;
+      padding: 13px;
+      border-radius: 15px;
+      background: rgba(0,230,118,.1);
+      color: #00e676;
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 16px;
+      border: 0;
+      border-radius: 16px;
+      background: #00e676;
+      color: #001b0c;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .back {
+      background: #222;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <h1>📷 الكاميرا</h1>
+
+  <p class="subtitle">
+    هذا الهاتف أصبح كاميرا المراقبة
+  </p>
+
+  <video id="localVideo" autoplay muted playsinline></video>
+
+  <div class="card">
+
+    <h2>📱 امسح هذا الكود</h2>
+
+    <p>
+      افتح الموقع من الهاتف الآخر واختر
+      «مسح كود»
+    </p>
+
+    <div id="qrcode"></div>
+
+    <div class="code" id="peerId">
+      إنشاء الكود...
+    </div>
+
+    <div class="status" id="status">
+      🟡 جاري تجهيز الكاميرا...
+    </div>
+
+  </div>
+
+  <button onclick="location.href='index.html'">
+    العودة للرئيسية
+  </button>
+
+</div>
+
+
+<script>
+
+const video = document.getElementById("localVideo");
+const statusBox = document.getElementById("status");
+const peerIdBox = document.getElementById("peerId");
+
+let localStream;
+let peer;
+
+/* تشغيل الكاميرا */
+async function startCamera() {
+
+  try {
+
+    localStream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: {
+          ideal: "environment"
+        }
+      },
+      audio: true
+    });
+
+    video.srcObject = localStream;
+
+    statusBox.textContent =
+      "🟢 الكاميرا تعمل — بانتظار المراقب";
+
+    startPeer();
+
+  } catch (error) {
+
+    console.error(error);
+
+    statusBox.textContent =
+      "🔴 لم يتم السماح باستخدام الكاميرا والميكروفون";
+
+  }
+}
+
+
+/* إنشاء اتصال Peer */
+function startPeer() {
+
+  peer = new Peer();
+
+  peer.on("open", function(id) {
+
+    peerIdBox.textContent = id;
+
+    document.getElementById("qrcode").innerHTML = "";
+
+    new QRCode(document.getElementById("qrcode"), {
+      text: id,
+      width: 200,
+      height: 200
+    });
+
+    statusBox.textContent =
+      "🟢 جاهز — انتظر الهاتف المراقب";
+
+  });
+
+
+  /* عندما يتصل المراقب */
+  peer.on("call", function(call) {
+
+    statusBox.textContent =
+      "🔵 تم اتصال المراقب";
+
+    call.answer(localStream);
+
+  });
+
+
+  peer.on("error", function(error) {
+
+    console.error(error);
+
+    statusBox.textContent =
+      "🔴 حدث خطأ في الاتصال";
+
+  });
+
+}
+
+
+startCamera();
+
+</script>
+
+</body>
+</html>
