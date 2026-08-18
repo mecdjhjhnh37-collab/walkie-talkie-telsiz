@@ -1,4 +1,4 @@
-const CACHE_NAME = "camera-connect-v1";
+const CACHE_NAME = "camera-connect-v2";
 
 const FILES = [
   "./",
