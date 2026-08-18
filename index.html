@@ -480,30 +480,28 @@
 
   </main>
 
+function createCamera() {
+  window.location.assign("./camera.html");
+}
 
-  <script>
+function openViewer() {
+  window.location.assign("./viewer.html");
+}
 
-    function createCamera() {
-      window.location.href = "camera.html";
-    }
 
-    function openViewer() {
-      window.location.href = "viewer.html";
-    }
-
-  <script>
+/* تسجيل Service Worker */
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./sw.js")
-      .then(() => {
-        console.log("Camera Connect Service Worker جاهز");
+      .then(registration => {
+        console.log("Service Worker:", registration.scope);
       })
       .catch(error => {
-        console.error("Service Worker error:", error);
+        console.error("Service Worker:", error);
       });
   });
 }
-</script>
+  
 
 </body>
 </html>
