@@ -10,7 +10,6 @@
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
   <style>
-
     * {
       box-sizing: border-box;
     }
@@ -20,19 +19,19 @@
       min-height: 100vh;
       background: #050807;
       color: white;
-      font-family: Arial, sans-serif;
+      font-family: Arial, Tahoma, sans-serif;
     }
 
     .app {
       max-width: 650px;
       margin: auto;
-      padding: 25px 18px;
+      padding: 25px 18px 40px;
       text-align: center;
     }
 
     h1 {
       font-size: 32px;
-      margin-top: 20px;
+      margin: 15px 0 8px;
     }
 
     .subtitle {
@@ -41,16 +40,18 @@
 
     #reader {
       width: 100%;
-      margin: 30px auto;
+      margin: 25px auto;
       overflow: hidden;
       border-radius: 25px;
     }
 
-    video {
+    #remoteVideo {
+      display: none;
       width: 100%;
-      max-height: 65vh;
-      object-fit: contain;
-      background: black;
+      height: 65vh;
+      min-height: 350px;
+      object-fit: cover;
+      background: #000;
       border-radius: 25px;
       border: 2px solid #2979ff;
     }
@@ -61,6 +62,7 @@
       border-radius: 15px;
       background: rgba(41,121,255,.12);
       color: #66a3ff;
+      line-height: 1.6;
     }
 
     button {
@@ -71,13 +73,7 @@
       background: #222;
       color: white;
       font-size: 17px;
-      cursor: pointer;
     }
-
-    .hidden {
-      display: none;
-    }
-
   </style>
 </head>
 
@@ -94,14 +90,14 @@
   <div id="reader"></div>
 
   <div class="status" id="status">
-    🟡 بانتظار مسح الكود...
+    🟡 جاري تجهيز الماسح...
   </div>
 
   <video
     id="remoteVideo"
-    class="hidden"
     autoplay
     playsinline
+    controls="false"
   ></video>
 
   <button onclick="location.href='index.html'">
@@ -110,31 +106,50 @@
 
 </div>
 
-
 <script>
 
 const statusBox = document.getElementById("status");
 const remoteVideo = document.getElementById("remoteVideo");
 
-let peer = new Peer();
+let peer;
+let scanner;
 
 
-/* عند جاهزية المراقب */
-peer.on("open", function() {
+/* إنشاء Peer للمراقب */
+function startPeer() {
 
-  startScanner();
+  peer = new Peer();
 
-});
+  peer.on("open", function() {
+
+    statusBox.textContent =
+      "🟢 جاهز — امسح QR الخاص بالكاميرا";
+
+    startScanner();
+
+  });
+
+  peer.on("error", function(error) {
+
+    console.error(error);
+
+    statusBox.textContent =
+      "🔴 حدث خطأ في الاتصال";
+
+  });
+}
 
 
-/* تشغيل قارئ QR */
+/* تشغيل QR Scanner */
 function startScanner() {
 
-  const scanner = new Html5Qrcode("reader");
+  scanner = new Html5Qrcode("reader");
 
   scanner.start(
     {
-      facingMode: "environment"
+      facingMode: {
+        ideal: "environment"
+      }
     },
     {
       fps: 10,
@@ -148,7 +163,9 @@ function startScanner() {
 
       console.log("QR:", decodedText);
 
-      await scanner.stop();
+      try {
+        await scanner.stop();
+      } catch (e) {}
 
       document.getElementById("reader").style.display =
         "none";
@@ -158,9 +175,7 @@ function startScanner() {
     },
 
     function(errorMessage) {
-
-      // تجاهل أخطاء المسح العادية
-
+      // أخطاء المسح العادية نتجاهلها
     }
 
   ).catch(function(error) {
@@ -168,15 +183,14 @@ function startScanner() {
     console.error(error);
 
     statusBox.textContent =
-      "🔴 لم نستطع تشغيل الكاميرا لمسح الكود";
+      "🔴 لم نستطع تشغيل كاميرا الماسح";
 
   });
-
 }
 
 
 /* الاتصال بالكاميرا */
-async function connectToCamera(cameraPeerId) {
+async function connectToCamera(cameraId) {
 
   statusBox.textContent =
     "🟡 جاري الاتصال بالكاميرا...";
@@ -184,66 +198,73 @@ async function connectToCamera(cameraPeerId) {
   try {
 
     /*
-      المراقب لا يحتاج إرسال فيديو.
-      نحتاج فقط Stream فارغ حتى يتم إنشاء الاتصال.
+      نطلب كاميرا + مايك للمراقب فقط
+      من أجل إنشاء مسار فيديو في WebRTC.
+      
+      لن نعرض فيديو هذا الهاتف.
     */
-
-    const emptyStream =
+    const viewerStream =
       await navigator.mediaDevices.getUserMedia({
-        video: false,
+        video: true,
         audio: true
       });
 
+
     const call =
-      peer.call(cameraPeerId, emptyStream);
+      peer.call(cameraId, viewerStream);
+
 
     call.on("stream", function(remoteStream) {
 
+      console.log("Remote stream received");
+
       remoteVideo.srcObject = remoteStream;
 
-      remoteVideo.classList.remove("hidden");
+      remoteVideo.style.display = "block";
 
       statusBox.textContent =
-        "🟢 متصل بالكاميرا";
+        "🟢 متصل — البث مباشر";
+
+      remoteVideo.play().catch(function(error) {
+        console.log("Video play:", error);
+      });
 
     });
+
 
     call.on("close", function() {
 
       statusBox.textContent =
         "🟡 تم إنهاء الاتصال";
 
+      remoteVideo.style.display = "none";
+
     });
+
 
     call.on("error", function(error) {
 
       console.error(error);
 
       statusBox.textContent =
-        "🔴 فشل الاتصال";
+        "🔴 فشل اتصال الفيديو";
 
     });
+
 
   } catch (error) {
 
     console.error(error);
 
     statusBox.textContent =
-      "🔴 يجب السماح بالميكروفون للاتصال";
+      "🔴 يجب السماح بالكاميرا والمايك لإتمام الاتصال";
 
   }
 
 }
 
 
-peer.on("error", function(error) {
-
-  console.error(error);
-
-  statusBox.textContent =
-    "🔴 حدث خطأ في الاتصال";
-
-});
+startPeer();
 
 </script>
 
