@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Camera Connect</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, Tahoma, sans-serif;
+      color: white;
+      background:
+        radial-gradient(circle at 50% 0%, #123d35 0%, transparent 35%),
+        linear-gradient(180deg, #07110f 0%, #020504 100%);
+      overflow-x: hidden;
+    }
+
+    /* خلفية */
+    .background {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .glow {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: .18;
+    }
+
+    .glow.one {
+      background: #00e676;
+      top: -100px;
+      right: -100px;
+    }
+
+    .glow.two {
+      background: #2979ff;
+      bottom: -100px;
+      left: -100px;
+    }
+
+    /* المحتوى */
+    .app {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 650px;
+      min-height: 100vh;
+      margin: auto;
+      padding: 28px 20px 45px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* الهيدر */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 55px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 52px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 16px;
+      font-size: 27px;
+      background: linear-gradient(135deg, #00e676, #00a85a);
+      box-shadow: 0 10px 30px rgba(0, 230, 118, .22);
+    }
+
+    .brand h2 {
+      font-size: 21px;
+    }
+
+    .brand span {
+      display: block;
+      margin-top: 4px;
+      color: #8d9a97;
+      font-size: 12px;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 12px;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 20px;
+      background: rgba(255,255,255,.04);
+      color: #aab5b2;
+      font-size: 12px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #00e676;
+      box-shadow: 0 0 10px #00e676;
+    }
+
+    /* الترحيب */
+    .hero {
+      text-align: center;
+      margin-bottom: 42px;
+    }
+
+    .camera-icon {
+      width: 92px;
+      height: 92px;
+      margin: 0 auto 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 28px;
+      font-size: 47px;
+      background: rgba(255,255,255,.055);
+      border: 1px solid rgba(255,255,255,.09);
+      box-shadow:
+        0 20px 60px rgba(0,0,0,.3),
+        inset 0 0 30px rgba(255,255,255,.025);
+    }
+
+    .hero h1 {
+      font-size: clamp(30px, 7vw, 48px);
+      line-height: 1.2;
+      margin-bottom: 15px;
+      letter-spacing: -.8px;
+    }
+
+    .hero h1 span {
+      color: #00e676;
+    }
+
+    .hero p {
+      max-width: 430px;
+      margin: auto;
+      color: #9ba7a4;
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    /* الخيارات */
+    .choices {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .choice {
+      position: relative;
+      width: 100%;
+      min-height: 145px;
+      padding: 25px;
+      border-radius: 25px;
+      border: 1px solid rgba(255,255,255,.09);
+      color: white;
+      text-align: right;
+      cursor: pointer;
+      overflow: hidden;
+      transition: .25s ease;
+    }
+
+    .choice::before {
+      content: "";
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      filter: blur(55px);
+      opacity: .13;
+      top: -100px;
+      left: -60px;
+    }
+
+    .choice:hover {
+      transform: translateY(-4px);
+    }
+
+    .choice:active {
+      transform: scale(.98);
+    }
+
+    .camera-choice {
+      background: linear-gradient(
+        135deg,
+        rgba(0,230,118,.16),
+        rgba(0,230,118,.035)
+      );
+    }
+
+    .camera-choice::before {
+      background: #00e676;
+    }
+
+    .viewer-choice {
+      background: linear-gradient(
+        135deg,
+        rgba(41,121,255,.17),
+        rgba(41,121,255,.035)
+      );
+    }
+
+    .viewer-choice::before {
+      background: #2979ff;
+    }
+
+    .choice-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .choice-icon {
+      flex-shrink: 0;
+      width: 72px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 21px;
+      font-size: 34px;
+      background: rgba(255,255,255,.07);
+    }
+
+    .choice-text {
+      flex: 1;
+    }
+
+    .choice-text h3 {
+      font-size: 21px;
+      margin-bottom: 8px;
+    }
+
+    .choice-text p {
+      color: #9ca9a6;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .arrow {
+      font-size: 26px;
+      color: #7d8986;
+    }
+
+    .camera-choice .choice-icon {
+      box-shadow: 0 0 25px rgba(0,230,118,.12);
+    }
+
+    .viewer-choice .choice-icon {
+      box-shadow: 0 0 25px rgba(41,121,255,.12);
+    }
+
+    /* معلومات */
+    .info {
+      margin-top: 30px;
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.035);
+      border: 1px solid rgba(255,255,255,.06);
+      text-align: center;
+      color: #798581;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    /* الفوتر */
+    footer {
+      margin-top: auto;
+      padding-top: 45px;
+      text-align: center;
+      color: #58635f;
+      font-size: 11px;
+    }
+
+    /* الموبايل */
+    @media (max-width: 480px) {
+      .app {
+        padding: 20px 15px 35px;
+      }
+
+      header {
+        margin-bottom: 42px;
+      }
+
+      .logo {
+        width: 45px;
+        height: 45px;
+        border-radius: 14px;
+        font-size: 23px;
+      }
+
+      .brand h2 {
+        font-size: 18px;
+      }
+
+      .status {
+        font-size: 10px;
+      }
+
+      .camera-icon {
+        width: 82px;
+        height: 82px;
+        font-size: 40px;
+      }
+
+      .hero {
+        margin-bottom: 32px;
+      }
+
+      .hero h1 {
+        font-size: 31px;
+      }
+
+      .choice {
+        min-height: 130px;
+        padding: 19px;
+      }
+
+      .choice-icon {
+        width: 61px;
+        height: 61px;
+        font-size: 29px;
+      }
+
+      .choice-text h3 {
+        font-size: 18px;
+      }
+
+      .choice-text p {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="background">
+    <div class="glow one"></div>
+    <div class="glow two"></div>
+  </div>
+
+  <main class="app">
+
+    <header>
+      <div class="brand">
+        <div class="logo">📷</div>
+
+        <div>
+          <h2>Camera Connect</h2>
+          <span>نظام مراقبة ذكي</span>
+        </div>
+      </div>
+
+      <div class="status">
+        <div class="status-dot"></div>
+        متصل
+      </div>
+    </header>
+
+
+    <section class="hero">
+
+      <div class="camera-icon">
+        📹
+      </div>
+
+      <h1>
+        أهلاً بك في<br>
+        <span>Camera Connect</span>
+      </h1>
+
+      <p>
+        حوّل هاتفك إلى كاميرا مراقبة أو استخدمه
+        لمشاهدة الكاميرا بسهولة وأمان.
+      </p>
+
+    </section>
+
+
+    <section class="choices">
+
+      <button
+        class="choice camera-choice"
+        onclick="createCamera()"
+      >
+
+        <div class="choice-content">
+
+          <div class="choice-icon">
+            📷
+          </div>
+
+          <div class="choice-text">
+            <h3>إنشاء كود</h3>
+
+            <p>
+              استخدم هذا الهاتف ككاميرا
+              وأنشئ كودًا للاتصال بجهاز المراقبة.
+            </p>
+          </div>
+
+          <div class="arrow">←</div>
+
+        </div>
+
+      </button>
+
+
+      <button
+        class="choice viewer-choice"
+        onclick="openViewer()"
+      >
+
+        <div class="choice-content">
+
+          <div class="choice-icon">
+            👁️
+          </div>
+
+          <div class="choice-text">
+            <h3>مسح كود</h3>
+
+            <p>
+              استخدم هذا الهاتف كمراقب
+              وامسح كود الكاميرا للاتصال بها.
+            </p>
+          </div>
+
+          <div class="arrow">←</div>
+
+        </div>
+
+      </button>
+
+    </section>
+
+
+    <div class="info">
+      🔒 لن يتم تشغيل الكاميرا إلا بعد إعطاء
+      الإذن من الجهاز المستخدم ككاميرا.
+    </div>
+
+
+    <footer>
+      Camera Connect © 2026
+    </footer>
+
+  </main>
+
+
+  <script>
+
+    function createCamera() {
+      window.location.href = "camera.html";
+    }
+
+    function openViewer() {
+      window.location.href = "viewer.html";
+    }
+
+  </script>
+
+</body>
+</html>
