@@ -7,7 +7,7 @@
   <title>المراقب - Camera Connect</title>
 
   <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/qr-scanner@1.4.2/qr-scanner.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
 
   <style>
     * {
@@ -17,15 +17,12 @@
     body {
       margin: 0;
       min-height: 100vh;
-      background:
-        radial-gradient(circle at 50% 0%, #0d2440 0%, transparent 40%),
-        #050709;
+      background: #050709;
       color: white;
       font-family: Arial, Tahoma, sans-serif;
     }
 
     .app {
-      width: 100%;
       max-width: 650px;
       margin: auto;
       padding: 25px 16px 40px;
@@ -33,81 +30,81 @@
     }
 
     h1 {
+      font-size: 35px;
       margin: 15px 0 8px;
-      font-size: 34px;
     }
 
     .subtitle {
-      margin-bottom: 22px;
       color: #8e9aa8;
-      font-size: 16px;
+      margin-bottom: 25px;
     }
 
-    .scanner-box {
+    .scanner {
       position: relative;
       width: 100%;
       overflow: hidden;
-      border-radius: 28px;
+      border-radius: 25px;
       background: #000;
       border: 2px solid #2979ff;
-      box-shadow: 0 15px 50px rgba(0,0,0,.35);
     }
 
-    #scanVideo {
+    #camera {
       display: block;
       width: 100%;
-      height: 390px;
+      height: 430px;
       object-fit: cover;
-      background: #000;
     }
 
-    .scan-frame {
+    canvas {
+      display: none;
+    }
+
+    .frame {
       position: absolute;
-      top: 50%;
+      width: 230px;
+      height: 230px;
       left: 50%;
-      width: 220px;
-      height: 220px;
+      top: 50%;
       transform: translate(-50%, -50%);
-      border: 3px solid #ffffff;
+      border: 3px solid white;
       border-radius: 20px;
-      box-shadow:
-        0 0 0 9999px rgba(0,0,0,.28),
-        0 0 30px rgba(41,121,255,.5);
+      box-shadow: 0 0 30px rgba(41,121,255,.6);
       pointer-events: none;
     }
 
-    .line {
+    .scan-line {
       position: absolute;
-      left: 15px;
-      right: 15px;
-      top: 50%;
+      width: 190px;
       height: 3px;
       background: #2979ff;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      animation: scan 2s infinite;
       box-shadow: 0 0 15px #2979ff;
-      animation: scanLine 2s linear infinite;
     }
 
-    @keyframes scanLine {
+    @keyframes scan {
       0% {
-        transform: translateY(-90px);
+        transform: translate(-50%, -100px);
       }
+
       50% {
-        transform: translateY(90px);
+        transform: translate(-50%, 100px);
       }
+
       100% {
-        transform: translateY(-90px);
+        transform: translate(-50%, -100px);
       }
     }
 
     .status {
       margin: 20px 0;
       padding: 16px;
-      border-radius: 18px;
+      border-radius: 17px;
       background: rgba(41,121,255,.12);
-      border: 1px solid rgba(41,121,255,.15);
       color: #73a9ff;
-      font-size: 15px;
-      line-height: 1.7;
+      line-height: 1.6;
     }
 
     #remoteVideo {
@@ -115,10 +112,10 @@
       width: 100%;
       height: 65vh;
       min-height: 350px;
-      background: #000;
+      object-fit: cover;
+      background: black;
       border-radius: 25px;
       border: 2px solid #00e676;
-      object-fit: cover;
     }
 
     button {
@@ -130,14 +127,6 @@
       background: #222;
       color: white;
       font-size: 17px;
-      cursor: pointer;
-    }
-
-    .permission {
-      margin-top: 14px;
-      color: #7f8b97;
-      font-size: 12px;
-      line-height: 1.7;
     }
 
     .hidden {
@@ -153,38 +142,36 @@
   <h1>👁️ المراقب</h1>
 
   <p class="subtitle">
-    وجّه كاميرا الهاتف نحو QR الموجود على هاتف الكاميرا
+    وجّه الكاميرا نحو QR الموجود على هاتف الكاميرا
   </p>
 
   <div id="scannerArea">
 
-    <div class="scanner-box">
+    <div class="scanner">
 
       <video
-        id="scanVideo"
+        id="camera"
+        autoplay
         muted
         playsinline
       ></video>
 
-      <div class="scan-frame">
-        <div class="line"></div>
+      <div class="frame">
+        <div class="scan-line"></div>
       </div>
 
     </div>
 
-    <div class="status" id="status">
-      🟡 جاري تشغيل الكاميرا...
-    </div>
+    <canvas id="canvas"></canvas>
 
-    <div class="permission">
-      اسمح للمتصفح باستخدام الكاميرا حتى تتمكن من مسح الكود.
+    <div class="status" id="status">
+      🟡 جاري تشغيل قارئ QR...
     </div>
 
   </div>
 
   <video
     id="remoteVideo"
-    class="hidden"
     autoplay
     playsinline
   ></video>
@@ -198,230 +185,261 @@
 
 <script>
 
-const scanVideo = document.getElementById("scanVideo");
-const remoteVideo = document.getElementById("remoteVideo");
+const camera = document.getElementById("camera");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d", {
+  willReadFrequently: true
+});
+
 const statusBox = document.getElementById("status");
 const scannerArea = document.getElementById("scannerArea");
+const remoteVideo = document.getElementById("remoteVideo");
 
+let cameraStream = null;
 let peer = null;
-let qrScanner = null;
-let scannerStream = null;
+let scanning = false;
 
 
-/* تشغيل Peer */
-function createPeer() {
+/* =========================
+   تشغيل Peer
+========================= */
+
+function startPeer() {
 
   peer = new Peer();
 
   peer.on("open", function(id) {
 
-    console.log("Viewer Peer:", id);
+    console.log("Viewer ID:", id);
 
-    startScanner();
+    startCamera();
 
   });
 
   peer.on("error", function(error) {
 
-    console.error("Peer error:", error);
+    console.error(error);
 
     statusBox.textContent =
-      "🔴 حدث خطأ في الاتصال. أعد تحميل الصفحة.";
+      "🔴 حدث خطأ في الاتصال";
 
   });
 }
 
 
-/* تشغيل كاميرا المراقب */
-async function startScanner() {
+/* =========================
+   تشغيل الكاميرا
+========================= */
+
+async function startCamera() {
 
   try {
 
-    /*
-      نفتح الكاميرا مباشرة عبر getUserMedia
-      بدل الاعتماد على تشغيل المكتبة للكاميرا بنفسها.
-    */
+    cameraStream =
+      await navigator.mediaDevices.getUserMedia({
 
-    scannerStream = await navigator.mediaDevices.getUserMedia({
-      video: {
-        facingMode: {
-          ideal: "environment"
+        video: {
+          facingMode: {
+            ideal: "environment"
+          },
+
+          width: {
+            ideal: 1280
+          },
+
+          height: {
+            ideal: 720
+          }
         },
-        width: {
-          ideal: 1280
-        },
-        height: {
-          ideal: 720
-        }
-      },
-      audio: false
-    });
 
-    scanVideo.srcObject = scannerStream;
+        audio: false
 
-    await scanVideo.play();
+      });
+
+
+    camera.srcObject = cameraStream;
+
+    await camera.play();
 
     statusBox.textContent =
-      "🟢 الكاميرا تعمل — وجّهها نحو QR";
+      "🟢 وجّه الكاميرا نحو QR";
+
+    scanning = true;
+
+    scanQR();
+
+  }
+
+  catch(error) {
+
+    console.error(error);
+
+    statusBox.textContent =
+      "🔴 لم نستطع تشغيل الكاميرا";
+
+  }
+
+}
 
 
-    /*
-      بعد تشغيل الكاميرا نبدأ قارئ QR
-    */
+/* =========================
+   قراءة QR
+========================= */
 
-    qrScanner = new QrScanner(
-      scanVideo,
+function scanQR() {
 
-      result => {
+  if (!scanning) {
+    return;
+  }
 
-        const decodedText =
-          typeof result === "string"
-            ? result
-            : result.data;
+  if (
+    camera.readyState ===
+    camera.HAVE_ENOUGH_DATA
+  ) {
 
-        console.log("QR:", decodedText);
+    const width = camera.videoWidth;
+    const height = camera.videoHeight;
 
-        connectToCamera(decodedText);
+    if (width && height) {
 
-      },
+      canvas.width = width;
+      canvas.height = height;
 
-      {
-        preferredCamera: "environment",
-        highlightScanRegion: false,
-        highlightCodeOutline: false,
-        maxScansPerSecond: 8
+      ctx.drawImage(
+        camera,
+        0,
+        0,
+        width,
+        height
+      );
+
+      const imageData =
+        ctx.getImageData(
+          0,
+          0,
+          width,
+          height
+        );
+
+      const code =
+        jsQR(
+          imageData.data,
+          imageData.width,
+          imageData.height,
+          {
+            inversionAttempts:
+              "attemptBoth"
+          }
+        );
+
+
+      if (code) {
+
+        console.log(
+          "QR FOUND:",
+          code.data
+        );
+
+        scanning = false;
+
+        statusBox.textContent =
+          "🟢 تم العثور على الكود! جاري الاتصال...";
+
+        connectToCamera(code.data);
+
+        return;
       }
-    );
-
-
-    await qrScanner.start();
-
-  } catch (error) {
-
-    console.error("Scanner error:", error);
-
-    let message =
-      "🔴 تعذر تشغيل كاميرا الماسح.";
-
-    if (error.name === "NotAllowedError") {
-      message =
-        "🔴 تم رفض إذن الكاميرا. اسمح للمتصفح بالكاميرا ثم أعد تحميل الصفحة.";
     }
-
-    if (error.name === "NotFoundError") {
-      message =
-        "🔴 لم يتم العثور على كاميرا في هذا الهاتف.";
-    }
-
-    if (error.name === "NotReadableError") {
-      message =
-        "🔴 الكاميرا مستخدمة من تطبيق أو صفحة أخرى. أغلقها وحاول مرة ثانية.";
-    }
-
-    if (location.protocol !== "https:" &&
-        location.hostname !== "localhost") {
-
-      message =
-        "🔴 الكاميرا تحتاج إلى اتصال HTTPS. افتح الموقع من رابط GitHub Pages.";
-    }
-
-    statusBox.textContent = message;
-
   }
 
+  requestAnimationFrame(scanQR);
 }
 
 
-/* إيقاف الماسح */
-function stopScanner() {
+/* =========================
+   الاتصال بالكاميرا
+========================= */
 
-  if (qrScanner) {
-    try {
-      qrScanner.stop();
-    } catch (e) {}
-  }
-
-}
-
-
-/* الاتصال بالكاميرا */
-async function connectToCamera(cameraId) {
-
-  stopScanner();
-
-  statusBox.textContent =
-    "🟡 تم العثور على QR — جاري الاتصال...";
-
+function connectToCamera(cameraId) {
 
   try {
 
-    /*
-      نستخدم Stream الكاميرا الموجود أصلًا.
-      هكذا لا نطلب الكاميرا مرتين.
-    */
-
     const call =
-      peer.call(cameraId, scannerStream);
+      peer.call(
+        cameraId,
+        cameraStream
+      );
 
 
-    call.on("stream", async function(remoteStream) {
+    call.on("stream", function(remoteStream) {
 
-      console.log("Remote stream received");
+      console.log(
+        "REMOTE VIDEO RECEIVED"
+      );
 
-      remoteVideo.srcObject = remoteStream;
+      remoteVideo.srcObject =
+        remoteStream;
 
-      remoteVideo.classList.remove("hidden");
+      remoteVideo.style.display =
+        "block";
 
-      scannerArea.classList.add("hidden");
+      scannerArea.style.display =
+        "none";
 
       statusBox.textContent =
-        "🟢 تم الاتصال — البث مباشر";
+        "🟢 متصل — البث مباشر";
 
-      try {
-        await remoteVideo.play();
-      } catch (e) {
-        console.log("Remote video play:", e);
-      }
+      remoteVideo.play().catch(
+        error => console.log(error)
+      );
 
     });
 
 
     call.on("close", function() {
 
-      remoteVideo.classList.add("hidden");
+      remoteVideo.style.display =
+        "none";
 
-      scannerArea.classList.remove("hidden");
+      scannerArea.style.display =
+        "block";
 
       statusBox.textContent =
-        "🟡 تم إنهاء الاتصال.";
+        "🟡 تم إنهاء الاتصال";
 
-      startScanner();
+      scanning = true;
+
+      scanQR();
 
     });
 
 
     call.on("error", function(error) {
 
-      console.error("Call error:", error);
+      console.error(error);
 
       statusBox.textContent =
-        "🔴 فشل اتصال الفيديو.";
+        "🔴 فشل الاتصال بالكاميرا";
 
     });
 
-  } catch (error) {
+  }
+
+  catch(error) {
 
     console.error(error);
 
     statusBox.textContent =
-      "🔴 حدث خطأ أثناء الاتصال.";
+      "🔴 حدث خطأ أثناء الاتصال";
 
   }
 
 }
 
 
-createPeer();
+/* تشغيل */
+
+startPeer();
 
 </script>
 
