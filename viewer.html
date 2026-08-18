@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>المراقب - Camera Connect</title>
+
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #050807;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    .app {
+      max-width: 650px;
+      margin: auto;
+      padding: 25px 18px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 32px;
+      margin-top: 20px;
+    }
+
+    .subtitle {
+      color: #8e9995;
+    }
+
+    #reader {
+      width: 100%;
+      margin: 30px auto;
+      overflow: hidden;
+      border-radius: 25px;
+    }
+
+    video {
+      width: 100%;
+      max-height: 65vh;
+      object-fit: contain;
+      background: black;
+      border-radius: 25px;
+      border: 2px solid #2979ff;
+    }
+
+    .status {
+      margin: 20px 0;
+      padding: 15px;
+      border-radius: 15px;
+      background: rgba(41,121,255,.12);
+      color: #66a3ff;
+    }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      border: 0;
+      border-radius: 16px;
+      background: #222;
+      color: white;
+      font-size: 17px;
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <h1>👁️ المراقب</h1>
+
+  <p class="subtitle">
+    امسح QR الموجود على هاتف الكاميرا
+  </p>
+
+  <div id="reader"></div>
+
+  <div class="status" id="status">
+    🟡 بانتظار مسح الكود...
+  </div>
+
+  <video
+    id="remoteVideo"
+    class="hidden"
+    autoplay
+    playsinline
+  ></video>
+
+  <button onclick="location.href='index.html'">
+    العودة للرئيسية
+  </button>
+
+</div>
+
+
+<script>
+
+const statusBox = document.getElementById("status");
+const remoteVideo = document.getElementById("remoteVideo");
+
+let peer = new Peer();
+
+
+/* عند جاهزية المراقب */
+peer.on("open", function() {
+
+  startScanner();
+
+});
+
+
+/* تشغيل قارئ QR */
+function startScanner() {
+
+  const scanner = new Html5Qrcode("reader");
+
+  scanner.start(
+    {
+      facingMode: "environment"
+    },
+    {
+      fps: 10,
+      qrbox: {
+        width: 250,
+        height: 250
+      }
+    },
+
+    async function(decodedText) {
+
+      console.log("QR:", decodedText);
+
+      await scanner.stop();
+
+      document.getElementById("reader").style.display =
+        "none";
+
+      connectToCamera(decodedText);
+
+    },
+
+    function(errorMessage) {
+
+      // تجاهل أخطاء المسح العادية
+
+    }
+
+  ).catch(function(error) {
+
+    console.error(error);
+
+    statusBox.textContent =
+      "🔴 لم نستطع تشغيل الكاميرا لمسح الكود";
+
+  });
+
+}
+
+
+/* الاتصال بالكاميرا */
+async function connectToCamera(cameraPeerId) {
+
+  statusBox.textContent =
+    "🟡 جاري الاتصال بالكاميرا...";
+
+  try {
+
+    /*
+      المراقب لا يحتاج إرسال فيديو.
+      نحتاج فقط Stream فارغ حتى يتم إنشاء الاتصال.
+    */
+
+    const emptyStream =
+      await navigator.mediaDevices.getUserMedia({
+        video: false,
+        audio: true
+      });
+
+    const call =
+      peer.call(cameraPeerId, emptyStream);
+
+    call.on("stream", function(remoteStream) {
+
+      remoteVideo.srcObject = remoteStream;
+
+      remoteVideo.classList.remove("hidden");
+
+      statusBox.textContent =
+        "🟢 متصل بالكاميرا";
+
+    });
+
+    call.on("close", function() {
+
+      statusBox.textContent =
+        "🟡 تم إنهاء الاتصال";
+
+    });
+
+    call.on("error", function(error) {
+
+      console.error(error);
+
+      statusBox.textContent =
+        "🔴 فشل الاتصال";
+
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    statusBox.textContent =
+      "🔴 يجب السماح بالميكروفون للاتصال";
+
+  }
+
+}
+
+
+peer.on("error", function(error) {
+
+  console.error(error);
+
+  statusBox.textContent =
+    "🔴 حدث خطأ في الاتصال";
+
+});
+
+</script>
+
+</body>
+</html>
