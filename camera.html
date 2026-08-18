@@ -97,6 +97,15 @@
       background: #222;
       color: white;
       font-size: 17px;
+      cursor: pointer;
+    }
+
+    #endBroadcast {
+      background: #b71c1c;
+    }
+
+    #endBroadcast:active {
+      transform: scale(.98);
     }
   </style>
 </head>
@@ -134,91 +143,141 @@
 
   </div>
 
+  <button id="endBroadcast">
+    🔴 إنهاء البث
+  </button>
+
   <button onclick="location.href='index.html'">
     العودة للرئيسية
   </button>
-  
-<button id="endBroadcast">
-  🔴 إنهاء البث
-</button>
+
 </div>
+
 
 <script>
 
 const video = document.getElementById("localVideo");
 const statusBox = document.getElementById("status");
 const peerIdBox = document.getElementById("peerId");
+const endButton = document.getElementById("endBroadcast");
 
 let localStream = null;
 let peer = null;
+let activeCall = null;
+let broadcastEnded = false;
 
 
-/* تشغيل الكاميرا */
+/* =========================
+   تشغيل الكاميرا
+========================= */
+
 async function startCamera() {
 
   try {
 
     localStream = await navigator.mediaDevices.getUserMedia({
+
       video: {
         facingMode: "environment",
+
         width: {
           ideal: 1280
         },
+
         height: {
           ideal: 720
         }
       },
+
       audio: true
+
     });
 
-    const videoTrack = localStream.getVideoTracks()[0];
+
+    const videoTrack =
+      localStream.getVideoTracks()[0];
+
 
     if (!videoTrack) {
-      throw new Error("لم يتم الحصول على مسار الفيديو");
+
+      throw new Error(
+        "لم يتم الحصول على مسار الفيديو"
+      );
+
     }
+
 
     videoTrack.enabled = true;
 
     video.srcObject = localStream;
 
+
     try {
+
       await video.play();
+
     } catch (e) {
-      console.log("Autoplay:", e);
+
+      console.log(
+        "Autoplay:",
+        e
+      );
+
     }
+
 
     statusBox.textContent =
       "🟢 الكاميرا تعمل — جاري إنشاء كود الاتصال";
 
+
     createPeer();
 
-  } catch (error) {
+  }
 
-    console.error("Camera error:", error);
+  catch (error) {
+
+    console.error(
+      "Camera error:",
+      error
+    );
 
     statusBox.textContent =
       "🔴 لم نستطع تشغيل الكاميرا. تأكد من إعطاء إذن الكاميرا والمايك.";
 
   }
+
 }
 
 
-/* إنشاء Peer */
+/* =========================
+   إنشاء Peer
+========================= */
+
 function createPeer() {
 
   peer = new Peer();
 
+
   peer.on("open", function(id) {
 
-    peerIdBox.textContent = id;
+    peerIdBox.textContent =
+      id;
 
-    document.getElementById("qrcode").innerHTML = "";
 
-    new QRCode(document.getElementById("qrcode"), {
-      text: id,
-      width: 200,
-      height: 200
-    });
+    document.getElementById(
+      "qrcode"
+    ).innerHTML = "";
+
+
+    new QRCode(
+      document.getElementById("qrcode"),
+      {
+        text: id,
+        width: 200,
+        height: 200
+      }
+    );
+
 
     statusBox.textContent =
       "🟢 جاهز — انتظر اتصال المراقب";
@@ -226,20 +285,63 @@ function createPeer() {
   });
 
 
-  /* عندما يتصل المراقب */
+  /* =========================
+     اتصال المراقب
+  ========================= */
+
   peer.on("call", function(call) {
 
-    console.log("Incoming call");
+    if (broadcastEnded) {
+      return;
+    }
+
+
+    console.log(
+      "Incoming call"
+    );
+
+
+    activeCall = call;
+
 
     statusBox.textContent =
       "🔵 المراقب يتصل...";
 
-    call.answer(localStream);
+
+    call.answer(
+      localStream
+    );
+
 
     call.on("close", function() {
 
-      statusBox.textContent =
-        "🟢 الكاميرا تعمل — بانتظار المراقب";
+      if (!broadcastEnded) {
+
+        activeCall = null;
+
+        statusBox.textContent =
+          "🟢 الكاميرا تعمل — بانتظار المراقب";
+
+      }
+
+    });
+
+
+    call.on("error", function(error) {
+
+      console.error(
+        "Call error:",
+        error
+      );
+
+      if (!broadcastEnded) {
+
+        activeCall = null;
+
+        statusBox.textContent =
+          "🔴 حدث خطأ في اتصال الفيديو";
+
+      }
 
     });
 
@@ -248,15 +350,123 @@ function createPeer() {
 
   peer.on("error", function(error) {
 
-    console.error("Peer error:", error);
+    console.error(
+      "Peer error:",
+      error
+    );
 
-    statusBox.textContent =
-      "🔴 حدث خطأ في الاتصال";
+
+    if (!broadcastEnded) {
+
+      statusBox.textContent =
+        "🔴 حدث خطأ في الاتصال";
+
+    }
 
   });
 
 }
 
+
+/* =========================
+   إنهاء البث
+========================= */
+
+endButton.addEventListener(
+  "click",
+  function() {
+
+    broadcastEnded = true;
+
+
+    /* إغلاق اتصال المراقب */
+
+    if (activeCall) {
+
+      try {
+
+        activeCall.close();
+
+      } catch (error) {
+
+        console.log(error);
+
+      }
+
+      activeCall = null;
+
+    }
+
+
+    /* إيقاف الكاميرا والمايك */
+
+    if (localStream) {
+
+      localStream
+        .getTracks()
+        .forEach(function(track) {
+
+          track.stop();
+
+        });
+
+      localStream = null;
+
+    }
+
+
+    /* إزالة الفيديو */
+
+    video.srcObject = null;
+
+
+    /* إغلاق Peer */
+
+    if (peer) {
+
+      try {
+
+        peer.destroy();
+
+      } catch (error) {
+
+        console.log(error);
+
+      }
+
+      peer = null;
+
+    }
+
+
+    /* تحديث الواجهة */
+
+    statusBox.textContent =
+      "🔴 تم إنهاء البث";
+
+
+    endButton.disabled = true;
+
+    endButton.textContent =
+      "تم إنهاء البث";
+
+    endButton.style.opacity =
+      "0.6";
+
+
+    peerIdBox.textContent =
+      "انتهت الجلسة";
+
+
+    document.getElementById(
+      "qrcode"
+    ).innerHTML = "";
+
+  }
+);
+
+
+/* تشغيل */
 
 startCamera();
 
