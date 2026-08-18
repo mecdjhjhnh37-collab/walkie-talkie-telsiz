@@ -487,7 +487,19 @@
       window.location.href = "viewer.html";
     }
 
-  </script>
+  <script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js")
+      .then(() => {
+        console.log("Camera Connect Service Worker جاهز");
+      })
+      .catch(error => {
+        console.error("Service Worker error:", error);
+      });
+  });
+}
+</script>
 
 </body>
 </html>
