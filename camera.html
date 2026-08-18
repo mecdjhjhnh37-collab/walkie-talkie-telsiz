@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>الكاميرا - Camera Connect</title>
 
   <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
@@ -18,19 +19,19 @@
       min-height: 100vh;
       background: #050807;
       color: white;
-      font-family: Arial, sans-serif;
+      font-family: Arial, Tahoma, sans-serif;
     }
 
     .app {
       max-width: 650px;
       margin: auto;
-      padding: 25px 18px;
+      padding: 25px 18px 40px;
       text-align: center;
     }
 
     h1 {
-      margin-top: 20px;
       font-size: 32px;
+      margin: 15px 0 8px;
     }
 
     .subtitle {
@@ -39,17 +40,19 @@
     }
 
     video {
+      display: block;
       width: 100%;
-      max-height: 55vh;
+      height: 55vh;
+      min-height: 300px;
       object-fit: cover;
-      border-radius: 25px;
       background: #111;
+      border-radius: 25px;
       border: 2px solid #00e676;
     }
 
     .card {
       margin-top: 22px;
-      padding: 25px;
+      padding: 22px;
       border-radius: 25px;
       background: rgba(255,255,255,.05);
       border: 1px solid rgba(255,255,255,.1);
@@ -65,41 +68,35 @@
     }
 
     #qrcode img {
-      width: 200px;
-      height: 200px;
+      width: 200px !important;
+      height: 200px !important;
     }
 
     .code {
       direction: ltr;
       word-break: break-all;
       color: #00e676;
-      font-size: 13px;
+      font-size: 12px;
     }
 
     .status {
-      margin-top: 20px;
-      padding: 13px;
+      margin-top: 18px;
+      padding: 14px;
       border-radius: 15px;
       background: rgba(0,230,118,.1);
       color: #00e676;
+      line-height: 1.6;
     }
 
     button {
-      margin-top: 20px;
       width: 100%;
+      margin-top: 20px;
       padding: 16px;
       border: 0;
       border-radius: 16px;
-      background: #00e676;
-      color: #001b0c;
-      font-size: 17px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .back {
       background: #222;
       color: white;
+      font-size: 17px;
     }
   </style>
 </head>
@@ -111,28 +108,28 @@
   <h1>📷 الكاميرا</h1>
 
   <p class="subtitle">
-    هذا الهاتف أصبح كاميرا المراقبة
+    هذا الهاتف هو الكاميرا
   </p>
 
-  <video id="localVideo" autoplay muted playsinline></video>
+  <video
+    id="localVideo"
+    autoplay
+    muted
+    playsinline
+  ></video>
 
   <div class="card">
 
-    <h2>📱 امسح هذا الكود</h2>
-
-    <p>
-      افتح الموقع من الهاتف الآخر واختر
-      «مسح كود»
-    </p>
+    <h2>📱 امسح هذا الكود من الهاتف الآخر</h2>
 
     <div id="qrcode"></div>
 
     <div class="code" id="peerId">
-      إنشاء الكود...
+      جاري إنشاء الكود...
     </div>
 
     <div class="status" id="status">
-      🟡 جاري تجهيز الكاميرا...
+      🟡 جاري تشغيل الكاميرا...
     </div>
 
   </div>
@@ -143,15 +140,15 @@
 
 </div>
 
-
 <script>
 
 const video = document.getElementById("localVideo");
 const statusBox = document.getElementById("status");
 const peerIdBox = document.getElementById("peerId");
 
-let localStream;
-let peer;
+let localStream = null;
+let peer = null;
+
 
 /* تشغيل الكاميرا */
 async function startCamera() {
@@ -160,33 +157,51 @@ async function startCamera() {
 
     localStream = await navigator.mediaDevices.getUserMedia({
       video: {
-        facingMode: {
-          ideal: "environment"
+        facingMode: "environment",
+        width: {
+          ideal: 1280
+        },
+        height: {
+          ideal: 720
         }
       },
       audio: true
     });
 
+    const videoTrack = localStream.getVideoTracks()[0];
+
+    if (!videoTrack) {
+      throw new Error("لم يتم الحصول على مسار الفيديو");
+    }
+
+    videoTrack.enabled = true;
+
     video.srcObject = localStream;
 
-    statusBox.textContent =
-      "🟢 الكاميرا تعمل — بانتظار المراقب";
+    try {
+      await video.play();
+    } catch (e) {
+      console.log("Autoplay:", e);
+    }
 
-    startPeer();
+    statusBox.textContent =
+      "🟢 الكاميرا تعمل — جاري إنشاء كود الاتصال";
+
+    createPeer();
 
   } catch (error) {
 
-    console.error(error);
+    console.error("Camera error:", error);
 
     statusBox.textContent =
-      "🔴 لم يتم السماح باستخدام الكاميرا والميكروفون";
+      "🔴 لم نستطع تشغيل الكاميرا. تأكد من إعطاء إذن الكاميرا والمايك.";
 
   }
 }
 
 
-/* إنشاء اتصال Peer */
-function startPeer() {
+/* إنشاء Peer */
+function createPeer() {
 
   peer = new Peer();
 
@@ -203,7 +218,7 @@ function startPeer() {
     });
 
     statusBox.textContent =
-      "🟢 جاهز — انتظر الهاتف المراقب";
+      "🟢 جاهز — انتظر اتصال المراقب";
 
   });
 
@@ -211,17 +226,26 @@ function startPeer() {
   /* عندما يتصل المراقب */
   peer.on("call", function(call) {
 
+    console.log("Incoming call");
+
     statusBox.textContent =
-      "🔵 تم اتصال المراقب";
+      "🔵 المراقب يتصل...";
 
     call.answer(localStream);
+
+    call.on("close", function() {
+
+      statusBox.textContent =
+        "🟢 الكاميرا تعمل — بانتظار المراقب";
+
+    });
 
   });
 
 
   peer.on("error", function(error) {
 
-    console.error(error);
+    console.error("Peer error:", error);
 
     statusBox.textContent =
       "🔴 حدث خطأ في الاتصال";
