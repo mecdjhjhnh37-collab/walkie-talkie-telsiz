@@ -1,369 +1,559 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 
-  <title>الكاميرا - Camera Connect</title>
+<meta name="theme-color" content="#050807">
 
-  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<title>الكاميرا - Camera Connect</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html,body{
+    width:100%;
+    min-height:100%;
+}
+
+body{
+    min-height:100dvh;
+    background:#050807;
+    color:#fff;
+    font-family:Arial,Tahoma,sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:16px;
+}
+
+.app{
+    width:100%;
+    max-width:650px;
+}
+
+.card{
+    background:#07110f;
+    border:1px solid #12352c;
+    border-radius:24px;
+    padding:20px;
+    box-shadow:0 15px 50px rgba(0,0,0,.45);
+}
+
+h1{
+    text-align:center;
+    font-size:25px;
+    margin-bottom:6px;
+}
+
+.subtitle{
+    text-align:center;
+    color:#8aa59c;
+    font-size:14px;
+    margin-bottom:18px;
+}
+
+.video-box{
+    width:100%;
+    aspect-ratio:16/9;
+    background:#020504;
+    border-radius:18px;
+    overflow:hidden;
+    border:1px solid #163d32;
+    margin-bottom:18px;
+}
+
+#localVideo{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.info{
+    background:#020908;
+    border:1px solid #12352c;
+    border-radius:18px;
+    padding:16px;
+    text-align:center;
+}
+
+.label{
+    color:#8aa59c;
+    font-size:13px;
+    margin-bottom:7px;
+}
+
+.code{
+    direction:ltr;
+    font-size:28px;
+    font-weight:bold;
+    letter-spacing:5px;
+    color:#00e889;
+    word-break:break-all;
+    margin-bottom:15px;
+}
+
+.status{
+    min-height:24px;
+    color:#b8ccc5;
+    font-size:14px;
+}
+
+.qr{
+    width:220px;
+    height:220px;
+    margin:18px auto;
+    padding:10px;
+    background:#fff;
+    border-radius:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.qr img,
+.qr canvas{
+    max-width:100%;
+    max-height:100%;
+}
+
+.buttons{
+    display:grid;
+    gap:10px;
+    margin-top:15px;
+}
+
+button{
+    width:100%;
+    border:0;
+    border-radius:15px;
+    padding:14px;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.end{
+    background:#00e889;
+    color:#00140d;
+}
+
+.home{
+    background:#10221d;
+    color:#fff;
+    border:1px solid #19473a;
+}
+
+button:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+
+.note{
+    text-align:center;
+    color:#6f8981;
+    font-size:12px;
+    margin-top:14px;
+    line-height:1.6;
+}
+
+.error{
+    color:#ff7777;
+}
+
+.success{
+    color:#00e889;
+}
+
+@media(max-width:400px){
+    .card{
+        padding:15px;
+        border-radius:20px;
     }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: #050807;
-      color: white;
-      font-family: Arial, Tahoma, sans-serif;
+    .code{
+        font-size:23px;
+        letter-spacing:3px;
     }
 
-    .app {
-      max-width: 650px;
-      margin: auto;
-      padding: 25px 18px 40px;
-      text-align: center;
+    .qr{
+        width:200px;
+        height:200px;
     }
-
-    h1 {
-      font-size: 32px;
-      margin: 15px 0 8px;
-    }
-
-    .subtitle {
-      color: #8e9995;
-      margin-bottom: 25px;
-    }
-
-    video {
-      display: block;
-      width: 100%;
-      height: 55vh;
-      min-height: 300px;
-      object-fit: cover;
-      background: #111;
-      border-radius: 25px;
-      border: 2px solid #00e676;
-    }
-
-    .card {
-      margin-top: 22px;
-      padding: 22px;
-      border-radius: 25px;
-      background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.1);
-    }
-
-    #qrcode {
-      width: 220px;
-      height: 220px;
-      margin: 20px auto;
-      padding: 10px;
-      background: white;
-      border-radius: 15px;
-    }
-
-    #qrcode img {
-      width: 200px !important;
-      height: 200px !important;
-    }
-
-    .code {
-      direction: ltr;
-      word-break: break-all;
-      color: #00e676;
-      font-size: 12px;
-    }
-
-    .status {
-      margin-top: 18px;
-      padding: 14px;
-      border-radius: 15px;
-      background: rgba(0,230,118,.1);
-      color: #00e676;
-      line-height: 1.6;
-    }
-
-    button {
-      width: 100%;
-      margin-top: 20px;
-      padding: 16px;
-      border: 0;
-      border-radius: 16px;
-      background: #222;
-      color: white;
-      font-size: 17px;
-      cursor: pointer;
-    }
-
-    #endBroadcast {
-      background: #b71c1c;
-    }
-
-    #endBroadcast:active {
-      transform: scale(.98);
-    }
-  </style>
+}
+</style>
 </head>
 
 <body>
 
 <div class="app">
 
-  <h1>📷 الكاميرا</h1>
+    <div class="card">
 
-  <p class="subtitle">
-    هذا الهاتف هو الكاميرا
-  </p>
+        <h1>📷 Camera Connect</h1>
 
-  <video
-    id="localVideo"
-    autoplay
-    muted
-    playsinline
-  ></video>
+        <div class="subtitle">
+            الكاميرا
+        </div>
 
-  <div class="card">
+        <div class="video-box">
+            <video
+                id="localVideo"
+                autoplay
+                muted
+                playsinline>
+            </video>
+        </div>
 
-    <h2>📱 امسح هذا الكود من الهاتف الآخر</h2>
+        <div class="info">
 
-    <div id="qrcode"></div>
+            <div class="label">
+                كود الكاميرا
+            </div>
 
-    <div class="code" id="peerId">
-      جاري إنشاء الكود...
+            <div id="cameraCode" class="code">
+                ------
+            </div>
+
+            <div id="qr" class="qr"></div>
+
+            <div id="status" class="status">
+                جاري تشغيل الكاميرا...
+            </div>
+
+        </div>
+
+        <div class="buttons">
+
+            <button
+                id="endBtn"
+                class="end"
+                disabled>
+                ⛔ إنهاء البث
+            </button>
+
+            <button
+                class="home"
+                onclick="goHome()">
+                🏠 الرئيسية
+            </button>
+
+        </div>
+
+        <div class="note">
+            يمكن للمراقب مسح QR أو إدخال كود الكاميرا يدويًا.
+        </div>
+
     </div>
-
-    <div class="status" id="status">
-      🟡 جاري تشغيل الكاميرا...
-    </div>
-
-  </div>
-
-  <button id="endBroadcast">
-    🔴 إنهاء البث
-  </button>
-
-  <button onclick="location.href='index.html'">
-    العودة للرئيسية
-  </button>
 
 </div>
 
-
 <script>
 
-const video = document.getElementById("localVideo");
-const statusBox = document.getElementById("status");
-const peerIdBox = document.getElementById("peerId");
-const endButton = document.getElementById("endBroadcast");
+"use strict";
 
 let localStream = null;
 let peer = null;
-let activeCall = null;
-let broadcastEnded = false;
+let activeCalls = new Set();
+let stopped = false;
+
+const localVideo = document.getElementById("localVideo");
+const cameraCode = document.getElementById("cameraCode");
+const qr = document.getElementById("qr");
+const statusEl = document.getElementById("status");
+const endBtn = document.getElementById("endBtn");
+
+
+/* =========================
+   توليد كود قصير
+========================= */
+
+function generateCameraCode(){
+
+    const chars =
+        "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+    let code = "";
+
+    for(let i = 0; i < 6; i++){
+        code += chars[
+            Math.floor(Math.random() * chars.length)
+        ];
+    }
+
+    return code;
+}
+
+
+/* =========================
+   الحالة
+========================= */
+
+function setStatus(text,type=""){
+
+    statusEl.textContent = text;
+
+    statusEl.className = "status";
+
+    if(type){
+        statusEl.classList.add(type);
+    }
+}
 
 
 /* =========================
    تشغيل الكاميرا
 ========================= */
 
-async function startCamera() {
+async function startCamera(){
 
-  try {
+    try{
 
-    localStream = await navigator.mediaDevices.getUserMedia({
+        setStatus("جاري طلب إذن الكاميرا...");
 
-      video: {
-        facingMode: "environment",
+        localStream = await navigator.mediaDevices.getUserMedia({
 
-        width: {
-          ideal: 1280
-        },
+            video:{
+                facingMode:{
+                    ideal:"environment"
+                },
+                width:{
+                    ideal:1280
+                },
+                height:{
+                    ideal:720
+                }
+            },
 
-        height: {
-          ideal: 720
-        }
-      },
+            audio:true
 
-      audio: true
+        });
 
-    });
+        localVideo.srcObject = localStream;
 
+        try{
+            await localVideo.play();
+        }catch(e){}
 
-    const videoTrack =
-      localStream.getVideoTracks()[0];
+        setStatus(
+            "الكاميرا تعمل — بانتظار المراقب",
+            "success"
+        );
 
+        endBtn.disabled = false;
 
-    if (!videoTrack) {
+        createPeer();
 
-      throw new Error(
-        "لم يتم الحصول على مسار الفيديو"
-      );
+    }catch(error){
 
-    }
+        console.error(error);
 
-
-    videoTrack.enabled = true;
-
-    video.srcObject = localStream;
-
-
-    try {
-
-      await video.play();
-
-    } catch (e) {
-
-      console.log(
-        "Autoplay:",
-        e
-      );
+        setStatus(
+            "تعذر تشغيل الكاميرا. تأكد من إعطاء الإذن للكاميرا والميكروفون.",
+            "error"
+        );
 
     }
-
-
-    statusBox.textContent =
-      "🟢 الكاميرا تعمل — جاري إنشاء كود الاتصال";
-
-
-    createPeer();
-
-  }
-
-  catch (error) {
-
-    console.error(
-      "Camera error:",
-      error
-    );
-
-    statusBox.textContent =
-      "🔴 لم نستطع تشغيل الكاميرا. تأكد من إعطاء إذن الكاميرا والمايك.";
-
-  }
 
 }
 
 
 /* =========================
-   إنشاء Peer
+   إنشاء Peer بكود قصير
 ========================= */
 
-function createPeer() {
+function createPeer(){
 
-  peer = new Peer();
+    if(stopped) return;
 
+    const id = generateCameraCode();
 
-  peer.on("open", function(id) {
+    setStatus("جاري إنشاء كود الكاميرا...");
 
-    peerIdBox.textContent =
-      id;
+    peer = new Peer(id);
 
+    peer.on("open",(openedId)=>{
 
-    document.getElementById(
-      "qrcode"
-    ).innerHTML = "";
+        console.log("Camera Peer ID:",openedId);
 
+        cameraCode.textContent = openedId;
 
-    new QRCode(
-      document.getElementById("qrcode"),
-      {
-        text: id,
-        width: 200,
-        height: 200
-      }
-    );
+        createQRCode(openedId);
 
-
-    statusBox.textContent =
-      "🟢 جاهز — انتظر اتصال المراقب";
-
-  });
-
-
-  /* =========================
-     اتصال المراقب
-  ========================= */
-
-  peer.on("call", function(call) {
-
-    if (broadcastEnded) {
-      return;
-    }
-
-
-    console.log(
-      "Incoming call"
-    );
-
-
-    activeCall = call;
-
-
-    statusBox.textContent =
-      "🔵 المراقب يتصل...";
-
-
-    call.answer(
-      localStream
-    );
-
-
-    call.on("close", function() {
-
-      if (!broadcastEnded) {
-
-        activeCall = null;
-
-        statusBox.textContent =
-          "🟢 الكاميرا تعمل — بانتظار المراقب";
-
-      }
+        setStatus(
+            "الكاميرا جاهزة — امسح QR أو أدخل الكود",
+            "success"
+        );
 
     });
 
 
-    call.on("error", function(error) {
+    /* =========================
+       اتصال مراقب بالكاميرا
+    ========================= */
 
-      console.error(
-        "Call error:",
-        error
-      );
+    peer.on("call",(call)=>{
 
-      if (!broadcastEnded) {
+        if(stopped || !localStream){
 
-        activeCall = null;
+            try{
+                call.close();
+            }catch(e){}
 
-        statusBox.textContent =
-          "🔴 حدث خطأ في اتصال الفيديو";
+            return;
+        }
 
-      }
+        console.log("Incoming viewer:",call.peer);
+
+        try{
+
+            call.answer(localStream);
+
+            activeCalls.add(call);
+
+            call.on("close",()=>{
+
+                activeCalls.delete(call);
+
+                if(!stopped){
+
+                    setStatus(
+                        "انتهى اتصال المراقب — بانتظار مراقب آخر",
+                        "success"
+                    );
+
+                }
+
+            });
+
+            call.on("error",(error)=>{
+
+                console.error("Call error:",error);
+
+                activeCalls.delete(call);
+
+            });
+
+            setStatus(
+                "🟢 يوجد مراقب متصل الآن",
+                "success"
+            );
+
+        }catch(error){
+
+            console.error(error);
+
+        }
 
     });
 
-  });
+
+    /* =========================
+       Peer Errors
+    ========================= */
+
+    peer.on("error",(error)=>{
+
+        console.error("Peer error:",error);
+
+        if(stopped) return;
+
+        if(error.type === "unavailable-id"){
+
+            try{
+                peer.destroy();
+            }catch(e){}
+
+            peer = null;
+
+            setTimeout(()=>{
+
+                if(!stopped){
+                    createPeer();
+                }
+
+            },300);
+
+            return;
+        }
+
+        if(error.type === "network"){
+
+            setStatus(
+                "مشكلة في الاتصال بالشبكة...",
+                "error"
+            );
+
+            return;
+        }
+
+        setStatus(
+            "حدث خطأ في الاتصال",
+            "error"
+        );
+
+    });
 
 
-  peer.on("error", function(error) {
+    peer.on("disconnected",()=>{
 
-    console.error(
-      "Peer error:",
-      error
-    );
+        if(stopped) return;
+
+        setStatus(
+            "انقطع اتصال الخادم، جاري إعادة الاتصال...",
+            "error"
+        );
+
+        try{
+            peer.reconnect();
+        }catch(e){}
+
+    });
+
+}
 
 
-    if (!broadcastEnded) {
+/* =========================
+   إنشاء QR
+========================= */
 
-      statusBox.textContent =
-        "🔴 حدث خطأ في الاتصال";
+function createQRCode(code){
+
+    qr.innerHTML = "";
+
+    try{
+
+        new QRCode(qr,{
+
+            text:code,
+
+            width:200,
+            height:200,
+
+            correctLevel:QRCode.CorrectLevel.M
+
+        });
+
+    }catch(error){
+
+        console.error(error);
+
+        setStatus(
+            "تعذر إنشاء QR",
+            "error"
+        );
 
     }
-
-  });
 
 }
 
@@ -372,101 +562,107 @@ function createPeer() {
    إنهاء البث
 ========================= */
 
-endButton.addEventListener(
-  "click",
-  function() {
+function endBroadcast(){
 
-    broadcastEnded = true;
+    if(stopped) return;
 
+    stopped = true;
 
-    /* إغلاق اتصال المراقب */
+    activeCalls.forEach(call=>{
 
-    if (activeCall) {
+        try{
+            call.close();
+        }catch(e){}
 
-      try {
+    });
 
-        activeCall.close();
+    activeCalls.clear();
 
-      } catch (error) {
+    if(localStream){
 
-        console.log(error);
+        localStream.getTracks().forEach(track=>{
 
-      }
-
-      activeCall = null;
-
-    }
-
-
-    /* إيقاف الكاميرا والمايك */
-
-    if (localStream) {
-
-      localStream
-        .getTracks()
-        .forEach(function(track) {
-
-          track.stop();
+            try{
+                track.stop();
+            }catch(e){}
 
         });
 
-      localStream = null;
-
+        localStream = null;
     }
 
+    localVideo.srcObject = null;
 
-    /* إزالة الفيديو */
+    if(peer){
 
-    video.srcObject = null;
+        try{
+            peer.destroy();
+        }catch(e){}
 
-
-    /* إغلاق Peer */
-
-    if (peer) {
-
-      try {
-
-        peer.destroy();
-
-      } catch (error) {
-
-        console.log(error);
-
-      }
-
-      peer = null;
-
+        peer = null;
     }
 
+    cameraCode.textContent = "------";
 
-    /* تحديث الواجهة */
+    qr.innerHTML = "";
 
-    statusBox.textContent =
-      "🔴 تم إنهاء البث";
+    endBtn.disabled = true;
 
+    setStatus(
+        "تم إنهاء البث"
+    );
 
-    endButton.disabled = true;
-
-    endButton.textContent =
-      "تم إنهاء البث";
-
-    endButton.style.opacity =
-      "0.6";
+}
 
 
-    peerIdBox.textContent =
-      "انتهت الجلسة";
+/* =========================
+   الرئيسية
+========================= */
+
+function goHome(){
+
+    endBroadcast();
+
+    setTimeout(()=>{
+
+        if(history.length > 1){
+            history.back();
+        }else{
+            location.href = "./";
+        }
+
+    },100);
+
+}
 
 
-    document.getElementById(
-      "qrcode"
-    ).innerHTML = "";
+/* =========================
+   زر الإنهاء
+========================= */
 
-  }
+endBtn.addEventListener(
+    "click",
+    endBroadcast
 );
 
 
-/* تشغيل */
+/* =========================
+   تنظيف عند الخروج
+========================= */
+
+window.addEventListener(
+    "pagehide",
+    ()=>{
+        if(!stopped){
+            endBroadcast();
+        }
+    }
+);
+
+
+/* =========================
+   البداية
+========================= */
 
 startCamera();
 
